@@ -16,18 +16,24 @@ const EXTRAS_COMMAND_PREFIX: &str = "bevy_brp_extras/";
 /// Currently provides:
 /// - `bevy_brp_extras/screenshot`: Capture screenshots
 /// - `bevy_brp_extras/shutdown`: Gracefully shutdown the app
-pub struct BrpExtrasPlugin;
+#[allow(non_upper_case_globals)]
+pub const BrpExtrasPlugin: BrpExtrasPlugin = BrpExtrasPlugin::new();
 
-impl BrpExtrasPlugin {
-    /// Create plugin with custom port
-    pub fn with_port(port: u16) -> BrpExtrasPluginWithPort {
-        BrpExtrasPluginWithPort { port }
-    }
+/// Plugin type for adding extra BRP methods
+pub struct BrpExtrasPlugin {
+    port: Option<u16>,
 }
 
-/// Plugin variant with custom port configuration
-pub struct BrpExtrasPluginWithPort {
-    port: u16,
+impl BrpExtrasPlugin {
+    /// Create a new plugin instance with default port
+    pub const fn new() -> Self {
+        Self { port: None }
+    }
+    
+    /// Create plugin with custom port
+    pub fn with_port(port: u16) -> Self {
+        Self { port: Some(port) }
+    }
 }
 
 impl Plugin for BrpExtrasPlugin {
@@ -43,32 +49,15 @@ impl Plugin for BrpExtrasPlugin {
                 shutdown_handler,
             );
 
-        app.add_plugins((remote_plugin, RemoteHttpPlugin::default()));
-
-        app.add_systems(Startup, move |_world: &mut World| {
-            setup_remote_methods(DEFAULT_REMOTE_PORT);
-        });
-    }
-}
-
-impl Plugin for BrpExtrasPluginWithPort {
-    fn build(&self, app: &mut App) {
-        // Add Bevy's remote plugins with our custom methods
-        let remote_plugin = RemotePlugin::default()
-            .with_method(
-                format!("{}screenshot", EXTRAS_COMMAND_PREFIX),
-                screenshot_handler,
-            )
-            .with_method(
-                format!("{}shutdown", EXTRAS_COMMAND_PREFIX),
-                shutdown_handler,
-            );
-
-        let http_plugin = RemoteHttpPlugin::default().with_port(self.port);
+        let http_plugin = if let Some(port) = self.port {
+            RemoteHttpPlugin::default().with_port(port)
+        } else {
+            RemoteHttpPlugin::default()
+        };
 
         app.add_plugins((remote_plugin, http_plugin));
 
-        let port = self.port;
+        let port = self.port.unwrap_or(DEFAULT_REMOTE_PORT);
         app.add_systems(Startup, move |_world: &mut World| {
             setup_remote_methods(port);
         });
