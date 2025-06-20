@@ -29,7 +29,7 @@ use bevy_brp_extras::BrpExtrasPlugin;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(BrpExtrasPlugin::default())
+        .add_plugins(BrpExtrasPlugin)
         .run();
 }
 ```
