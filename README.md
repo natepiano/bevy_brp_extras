@@ -20,7 +20,7 @@ Add to your `Cargo.toml`:
 bevy_brp_extras = "0.1"
 ```
 
-Add the plugin to your Bevy app:
+Add the plugin to your Bevy app
 
 ```rust
 use bevy::prelude::*;
@@ -29,7 +29,7 @@ use bevy_brp_extras::BrpExtrasPlugin;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(BrpExtrasPlugin)
+        .add_plugins(BrpExtrasPlugin) // will listen on BRP default port 15702
         .run();
 }
 ```
