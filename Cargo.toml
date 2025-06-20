@@ -1,6 +1,6 @@
 [package]
 name = "bevy_brp_extras"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = ["natepiano <slicks.curable.0k@icloud.com>"]
 description = "Extra BRP methods for Bevy apps including screenshot and shutdown capabilities"
