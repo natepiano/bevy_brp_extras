@@ -1,6 +1,9 @@
 # bevy_brp_extras
 
-Extra BRP (Bevy Remote Protocol) methods for Bevy applications. This crate provides additional remote control capabilities that can be optionally added to any Bevy app.
+bevy_brp_extras does two things
+1. Configures your app for bevy remote protocol (BRP)
+2. Adds additional methods that can be used with BRP
+
 
 ## Features
 
@@ -43,7 +46,7 @@ You can specify a custom port for the BRP server:
 
 ### Screenshot
 - **Method**: `bevy_brp_extras/screenshot`
-- **Parameters**: 
+- **Parameters**:
   - `path` (string, required): File path where the screenshot should be saved
 - **Returns**: Success status with the absolute path where the screenshot will be saved
 
