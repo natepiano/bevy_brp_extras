@@ -50,6 +50,8 @@ You can specify a custom port for the BRP server:
   - `path` (string, required): File path where the screenshot should be saved
 - **Returns**: Success status with the absolute path where the screenshot will be saved
 
+**Note**: If you're not using this with [bevy_brp_mcp](https://github.com/natepiano/bevy_brp_mcp), you'll need to tell your AI agent that this method requires a `path` parameter, or let it discover this by trying the method and getting an error message.
+
 ### Shutdown
 - **Method**: `bevy_brp_extras/shutdown`
 - **Parameters**: None
