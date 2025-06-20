@@ -16,17 +16,18 @@ const EXTRAS_COMMAND_PREFIX: &str = "bevy_brp_extras/";
 /// Currently provides:
 /// - `bevy_brp_extras/screenshot`: Capture screenshots
 /// - `bevy_brp_extras/shutdown`: Gracefully shutdown the app
-#[derive(Default)]
-pub struct BrpExtrasPlugin {
-    /// Optional custom port for remote control connections
-    pub port: Option<u16>,
-}
+pub struct BrpExtrasPlugin;
 
 impl BrpExtrasPlugin {
     /// Create plugin with custom port
-    pub fn with_port(port: u16) -> Self {
-        Self { port: Some(port) }
+    pub fn with_port(port: u16) -> BrpExtrasPluginWithPort {
+        BrpExtrasPluginWithPort { port }
     }
+}
+
+/// Plugin variant with custom port configuration
+pub struct BrpExtrasPluginWithPort {
+    port: u16,
 }
 
 impl Plugin for BrpExtrasPlugin {
@@ -42,15 +43,32 @@ impl Plugin for BrpExtrasPlugin {
                 shutdown_handler,
             );
 
-        let http_plugin = if let Some(port) = self.port {
-            RemoteHttpPlugin::default().with_port(port)
-        } else {
-            RemoteHttpPlugin::default()
-        };
+        app.add_plugins((remote_plugin, RemoteHttpPlugin::default()));
+
+        app.add_systems(Startup, move |_world: &mut World| {
+            setup_remote_methods(DEFAULT_REMOTE_PORT);
+        });
+    }
+}
+
+impl Plugin for BrpExtrasPluginWithPort {
+    fn build(&self, app: &mut App) {
+        // Add Bevy's remote plugins with our custom methods
+        let remote_plugin = RemotePlugin::default()
+            .with_method(
+                format!("{}screenshot", EXTRAS_COMMAND_PREFIX),
+                screenshot_handler,
+            )
+            .with_method(
+                format!("{}shutdown", EXTRAS_COMMAND_PREFIX),
+                shutdown_handler,
+            );
+
+        let http_plugin = RemoteHttpPlugin::default().with_port(self.port);
 
         app.add_plugins((remote_plugin, http_plugin));
 
-        let port = self.port.unwrap_or(DEFAULT_REMOTE_PORT);
+        let port = self.port;
         app.add_systems(Startup, move |_world: &mut World| {
             setup_remote_methods(port);
         });
