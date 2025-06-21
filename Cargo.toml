@@ -1,6 +1,6 @@
 [package]
 name = "bevy_brp_extras"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
 authors = ["natepiano <slicks.curable.0k@icloud.com>"]
 description = "Extra BRP methods for Bevy apps including screenshot and shutdown capabilities"
@@ -20,11 +20,15 @@ missing_docs = "deny"
 [dependencies]
 bevy = { version = "0.16.1", default-features = false, features = [
   "bevy_remote",
-  "bevy_render", 
+  "bevy_render",
   "bevy_window",
+  "bevy_winit",
   "bevy_log",
+  "bevy_sprite",
+  "bevy_core_pipeline",
 ] }
 serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
 
 [dev-dependencies]
 reqwest = { version = "0.12", features = ["blocking", "json"] }

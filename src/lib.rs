@@ -17,11 +17,18 @@
 //! ```
 //!
 //! This will add the following BRP methods to your app:
-//! - `bevy_brp_extras/screenshot`: Capture a screenshot
-//! - `bevy_brp_extras/shutdown`: Gracefully shutdown the app
+//! - `brp_extras/screenshot`: Capture a screenshot
+//! - `brp_extras/shutdown`: Gracefully shutdown the app
+//! - `brp_extras/discover_format`: Discover component format information
 
+mod discovery;
+mod format;
 mod plugin;
 
+pub use discovery::{
+    discover_component_format, discover_multiple_formats, get_common_component_types,
+};
+pub use format::{FieldInfo, FormatInfo, MutationInfo, SpawnInfo};
 pub use plugin::BrpExtrasPlugin;
 
 /// Default port for remote control connections

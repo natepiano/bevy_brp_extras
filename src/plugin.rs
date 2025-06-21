@@ -7,15 +7,17 @@ use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
 use serde_json::{Value, json};
 
 use crate::DEFAULT_REMOTE_PORT;
+use crate::discovery::discover_multiple_formats;
 
-/// Command prefix for bevy_brp_extras methods
-const EXTRAS_COMMAND_PREFIX: &str = "bevy_brp_extras/";
+/// Command prefix for brp_extras methods
+const EXTRAS_COMMAND_PREFIX: &str = "brp_extras/";
 
 /// Plugin that adds extra BRP methods to a Bevy app
 ///
 /// Currently provides:
-/// - `bevy_brp_extras/screenshot`: Capture screenshots
-/// - `bevy_brp_extras/shutdown`: Gracefully shutdown the app
+/// - `brp_extras/screenshot`: Capture screenshots
+/// - `brp_extras/shutdown`: Gracefully shutdown the app
+/// - `brp_extras/discover_format`: Discover component format information
 #[allow(non_upper_case_globals)]
 pub const BrpExtrasPlugin: BrpExtrasPlugin = BrpExtrasPlugin::new();
 
@@ -24,12 +26,18 @@ pub struct BrpExtrasPlugin {
     port: Option<u16>,
 }
 
+impl Default for BrpExtrasPlugin {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl BrpExtrasPlugin {
     /// Create a new plugin instance with default port
     pub const fn new() -> Self {
         Self { port: None }
     }
-    
+
     /// Create plugin with custom port
     pub fn with_port(port: u16) -> Self {
         Self { port: Some(port) }
@@ -47,6 +55,10 @@ impl Plugin for BrpExtrasPlugin {
             .with_method(
                 format!("{}shutdown", EXTRAS_COMMAND_PREFIX),
                 shutdown_handler,
+            )
+            .with_method(
+                format!("{}discover_format", EXTRAS_COMMAND_PREFIX),
+                discover_format_handler,
             );
 
         let http_plugin = if let Some(port) = self.port {
@@ -67,8 +79,9 @@ impl Plugin for BrpExtrasPlugin {
 fn setup_remote_methods(port: u16) {
     info!("BRP extras enabled on http://localhost:{}", port);
     trace!("Additional BRP methods available:");
-    trace!("  - bevy_brp_extras/screenshot - Take a screenshot");
-    trace!("  - bevy_brp_extras/shutdown - Shutdown the app");
+    trace!("  - brp_extras/screenshot - Take a screenshot");
+    trace!("  - brp_extras/shutdown - Shutdown the app");
+    trace!("  - brp_extras/discover_format - Discover component format information");
 }
 
 /// Handler for shutdown requests
@@ -95,9 +108,9 @@ fn screenshot_handler(In(params): In<Option<Value>>, world: &mut World) -> BrpRe
         .and_then(|v| v.get("path"))
         .and_then(|v| v.as_str())
         .ok_or_else(|| BrpError {
-            code: error_codes::INVALID_PARAMS,
+            code:    error_codes::INVALID_PARAMS,
             message: "Missing 'path' parameter".to_string(),
-            data: None,
+            data:    None,
         })?;
 
     // Convert to absolute path
@@ -107,9 +120,9 @@ fn screenshot_handler(In(params): In<Option<Value>>, world: &mut World) -> BrpRe
     } else {
         std::env::current_dir()
             .map_err(|e| BrpError {
-                code: error_codes::INTERNAL_ERROR,
+                code:    error_codes::INTERNAL_ERROR,
                 message: format!("Failed to get current directory: {}", e),
-                data: None,
+                data:    None,
             })?
             .join(path_buf)
     };
@@ -178,5 +191,56 @@ fn screenshot_handler(In(params): In<Option<Value>>, world: &mut World) -> BrpRe
         "path": absolute_path_str,
         "working_directory": std::env::current_dir().unwrap_or_else(|_| std::path::PathBuf::from("unknown")).to_string_lossy(),
         "note": "Screenshot capture initiated. The file will be saved asynchronously."
+    }))
+}
+
+/// Handler for format discovery requests
+///
+/// Discovers component format information for use with BRP operations
+fn discover_format_handler(In(params): In<Option<Value>>, world: &mut World) -> BrpResult {
+    // Parse parameters - types parameter is required
+    let type_names = if let Some(params) = params {
+        if let Some(types) = params.get("types") {
+            // Extract type names from parameters
+            match types {
+                Value::Array(arr) => arr
+                    .iter()
+                    .filter_map(|v| v.as_str())
+                    .map(|s| s.to_string())
+                    .collect(),
+                Value::String(s) => vec![s.clone()],
+                _ => {
+                    return Err(BrpError {
+                        code:    error_codes::INVALID_PARAMS,
+                        message: "Parameter 'types' must be a string or array of strings"
+                            .to_string(),
+                        data:    None,
+                    });
+                }
+            }
+        } else {
+            return Err(BrpError {
+                code: error_codes::INVALID_PARAMS,
+                message: "Missing required 'types' parameter. Specify component types to get format information for.".to_string(),
+                data: None,
+            });
+        }
+    } else {
+        return Err(BrpError {
+            code: error_codes::INVALID_PARAMS,
+            message: "Missing required 'types' parameter. Specify component types to get format information for.".to_string(),
+            data: None,
+        });
+    };
+
+    // Discover formats for the requested types
+    let formats = discover_multiple_formats(world, &type_names);
+
+    // Return the discovered formats
+    Ok(json!({
+        "success": true,
+        "formats": formats,
+        "requested_types": type_names,
+        "discovered_count": formats.len()
     }))
 }
