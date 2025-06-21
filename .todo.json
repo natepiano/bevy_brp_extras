@@ -1,0 +1,268 @@
+[
+  {
+    "id": "meta-1",
+    "content": "Do not deviate from the plan - if you think you need to deviate, STOP and ask the user for guidance",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-1",
+    "content": "Update bevy_brp_extras README.md to use Bevy compatibility table instead of hardcoded versions and add standard badges",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-1b",
+    "content": "build and fix any compile errors and any compile warnings for README updates",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-2",
+    "content": "Bump bevy_brp_extras version to 0.1.2 in Cargo.toml",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-2b",
+    "content": "build and fix any compile errors and any compile warnings for version bump",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-3",
+    "content": "Add brp_tool/discover_format BRP method constants and registration to bevy_brp_extras",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-3b",
+    "content": "build and fix any compile errors and any compile warnings for method constants",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-4",
+    "content": "Create format info structures (FormatInfo, MutationInfo, FieldInfo) in bevy_brp_extras",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-4b",
+    "content": "build and fix any compile errors and any compile warnings for format structures",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-5",
+    "content": "Create format discovery engine module with core discovery function in bevy_brp_extras",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-5b",
+    "content": "build and fix any compile errors and any compile warnings for discovery engine",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-6",
+    "content": "Wire up format discovery method handler in bevy_brp_extras request routing",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-6b",
+    "content": "build and fix any compile errors and any compile warnings for method handler",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-7",
+    "content": "Create trivial example app in bevy_brp_extras/examples/ that sets up BRP and spawns test entities",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-7b",
+    "content": "build and fix any compile errors and any compile warnings for example app",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-8",
+    "content": "VALIDATION CHECKPOINT: Run the example app and test brp_tool/discover_format directly via BRP call",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-8b",
+    "content": "build and fix any compile errors and any compile warnings for direct testing",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-9",
+    "content": "Validate discovered formats work correctly with actual spawn/mutate operations for Transform, Name, LinearRgba",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-9b",
+    "content": "build and fix any compile errors and any compile warnings for format validation",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-10",
+    "content": "MANDATORY STOP: If format discovery doesn't work correctly, STOP and review with user before proceeding",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-11",
+    "content": "Add mcp__brp__discover_format tool constants to bevy_brp_mcp",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-11b",
+    "content": "build and fix any compile errors and any compile warnings for MCP tool constants",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-12",
+    "content": "Create format discovery client module in bevy_brp_mcp",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-12b",
+    "content": "build and fix any compile errors and any compile warnings for client module",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-13",
+    "content": "Add format discovery tool definition to bevy_brp_mcp tool registry",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-13b",
+    "content": "build and fix any compile errors and any compile warnings for tool definition",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-14",
+    "content": "Enhance existing tier system to insert direct discovery as Tier 2 (after registry check, before pattern matching)",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-14b",
+    "content": "build and fix any compile errors and any compile warnings for tier system enhancement",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-15",
+    "content": "Test end-to-end coding agent workflows with intentionally wrong formats for both spawn and mutate operations",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "impl-15b",
+    "content": "build and fix any compile errors and any compile warnings for end-to-end testing",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "clippy-1",
+    "content": "run `cargo clippy --workspace --all-targets --all-features -- -D warnings -W clippy::all -W clippy::pedantic -W clippy::nursery -W clippy::cargo -A clippy::multiple_crate_versions -A clippy::cargo_common_metadata`",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "clippy-2",
+    "content": "fix any clippy issues following rules: do not mark code as dead, remove unused variables instead of prefixing with _",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "format-1",
+    "content": "run `cargo +nightly fmt`",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "test-1",
+    "content": "run 'cargo nextest run'",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "test-2",
+    "content": "If there are test issues, STOP and review them with the user",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "review-1",
+    "content": "STOP work here and return control to main agent",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "review-2",
+    "content": "task a new subagent to do a code review of the changes in the worktree - tell it to focus on identifying duplication and complexity. emphasize that it should only read and analyze, not modify anything.",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "review-3",
+    "content": "when this new subagent returns, STOP and review the suggested changes with the user",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  }
+]
