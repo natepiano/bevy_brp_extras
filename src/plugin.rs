@@ -46,15 +46,15 @@ impl BrpExtrasPlugin {
 impl Plugin for BrpExtrasPlugin {
     fn build(&self, app: &mut App) {
         // Add Bevy's remote plugins with our custom methods
-        info!("Registering BRP extras methods with prefix: {}", EXTRAS_COMMAND_PREFIX);
+        info!(
+            "Registering BRP extras methods with prefix: {}",
+            EXTRAS_COMMAND_PREFIX
+        );
         let screenshot_method = format!("{EXTRAS_COMMAND_PREFIX}screenshot");
         info!("Registering screenshot method as: {}", screenshot_method);
-        
+
         let remote_plugin = RemotePlugin::default()
-            .with_method(
-                screenshot_method,
-                screenshot::handler,
-            )
+            .with_method(screenshot_method, screenshot::handler)
             .with_method(
                 format!("{EXTRAS_COMMAND_PREFIX}shutdown"),
                 shutdown::handler,
