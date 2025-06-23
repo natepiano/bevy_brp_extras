@@ -106,8 +106,5 @@ jobs:
             ${{ runner.os }}-cargo-
 
       - name: Build release
-        run: cargo build --release --all-features --workspace
-
-      - name: Build examples
-        run: cargo build --release --examples
+        run: cargo build --release --all-features --workspace --examples
 
