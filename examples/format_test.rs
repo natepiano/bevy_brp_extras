@@ -13,14 +13,15 @@ use bevy::prelude::*;
 use bevy_brp_extras::BrpExtrasPlugin;
 
 fn main() {
-    // Use minimal plugins for headless compatibility in CI
     App::new()
-        .add_plugins((
-            MinimalPlugins,
-            // Add specific plugins needed for the example
-            bevy::asset::AssetPlugin::default(),
-            bevy::log::LogPlugin::default(),
-        ))
+        .add_plugins(DefaultPlugins.set(bevy::window::WindowPlugin {
+            primary_window: Some(bevy::window::Window {
+                title: "Format Discovery Test".to_string(),
+                resolution: (400.0, 300.0).into(),
+                ..default()
+            }),
+            ..default()
+        }))
         .add_plugins(BrpExtrasPlugin::new())
         .add_systems(Startup, setup_test_entities)
         .add_systems(Update, keep_running)
