@@ -26,6 +26,7 @@ bevy = { version = "0.16.1", default-features = false, features = [
   "bevy_log",
   "bevy_sprite",
   "bevy_core_pipeline",
+  "x11",
 ] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
