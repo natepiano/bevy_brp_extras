@@ -1,13 +1,13 @@
 //! Format discovery test example
 //!
-//! This example demonstrates the format discovery capabilities of bevy_brp_extras.
+//! This example demonstrates the format discovery capabilities of `bevy_brp_extras`.
 //! It spawns various entities with different components and enables the BRP extras
 //! plugin for testing format discovery functionality.
 //!
-//! Run with: cargo run --example format_test
+//! Run with: cargo run --example `format_test`
 //!
 //! Once running, you can test the format discovery by calling:
-//! curl -X POST http://localhost:15702/brp_extras/discover_format
+//! curl -X POST <http://localhost:15702/brp_extras/discover_format>
 
 use bevy::prelude::*;
 use bevy_brp_extras::BrpExtrasPlugin;
@@ -73,6 +73,7 @@ fn setup_test_entities(mut commands: Commands) {
 }
 
 /// Simple system to keep the app running and print periodic status
+#[allow(clippy::needless_pass_by_value)] // Bevy systems require owned Res<T>
 fn keep_running(time: Res<Time>) {
     // Print periodic status to show the app is alive
     if time.elapsed_secs() % 10.0 < time.delta_secs() {

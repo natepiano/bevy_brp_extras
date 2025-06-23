@@ -1,4 +1,4 @@
-# bevy_brp_extras
+# About
 
 [![Crates.io](https://img.shields.io/crates/v/bevy_brp_extras.svg)](https://crates.io/crates/bevy_brp_extras)
 [![Documentation](https://docs.rs/bevy_brp_extras/badge.svg)](https://docs.rs/bevy_brp_extras/)
@@ -10,13 +10,13 @@ bevy_brp_extras does two things
 1. Configures your app for bevy remote protocol (BRP)
 2. Adds additional methods that can be used with BRP
 
-## Bevy Compatibility
+## Supported Bevy Versions
 
 | bevy | bevy_brp_extras |
 |------|-----------------|
-| 0.16 | 0.1, 0.2        |
+| 0.16 | 0.1..0.2        |
 
-The bevy_brp_extras crate follows Bevy's version numbering and releases new versions for each Bevy release. 
+The bevy_brp_extras crate follows Bevy's version numbering and releases new versions for each Bevy release.
 The table above shows which versions of bevy_brp_extras are compatible with which versions of Bevy.
 
 
@@ -24,7 +24,7 @@ The table above shows which versions of bevy_brp_extras are compatible with whic
 
 Currently provides three BRP methods:
 - `brp_extras/screenshot` - Capture screenshots of the primary window
-- `brp_extras/shutdown` - Gracefully shutdown the application  
+- `brp_extras/shutdown` - Gracefully shutdown the application
 - `brp_extras/discover_format` - Get correct data formats for BRP spawn/insert/mutation operations
 
 ## Usage

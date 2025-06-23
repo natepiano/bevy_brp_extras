@@ -24,6 +24,8 @@
 mod discovery;
 mod format;
 mod plugin;
+mod screenshot;
+mod shutdown;
 
 pub use discovery::{
     discover_component_format, discover_multiple_formats, get_common_component_types,
@@ -33,5 +35,5 @@ pub use plugin::BrpExtrasPlugin;
 
 /// Default port for remote control connections
 ///
-/// This matches Bevy's RemoteHttpPlugin default port to ensure compatibility.
+/// This matches Bevy's `RemoteHttpPlugin` default port to ensure compatibility.
 pub const DEFAULT_REMOTE_PORT: u16 = 15702;
