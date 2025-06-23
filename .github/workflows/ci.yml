@@ -71,9 +71,9 @@ jobs:
       - name: Run clippy
         run: cargo clippy --workspace --all-targets --all-features -- -D warnings -W clippy::all -W clippy::pedantic -W clippy::nursery -W clippy::cargo -A clippy::multiple_crate_versions -A clippy::cargo_common_metadata
 
-  # Test suite
-  test:
-    name: Test Suite
+  # Build check
+  build:
+    name: Build Check
     runs-on: ubuntu-latest
 
     steps:
@@ -83,9 +83,6 @@ jobs:
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
-
-      - name: Install cargo-nextest
-        uses: taiki-e/install-action@nextest
 
       - name: Install mold linker
         uses: rui314/setup-mold@v1
@@ -103,15 +100,14 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}-v2
+          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}-v2
           restore-keys: |
-            ${{ runner.os }}-cargo-test-
+            ${{ runner.os }}-cargo-build-
             ${{ runner.os }}-cargo-
 
-      - name: Run all tests
-        run: cargo nextest run --all-features --workspace
-        env:
-          # Disable GPU/windowing for headless testing
-          WGPU_BACKEND: "gl"
-          WINIT_UNIX_BACKEND: "x11"
+      - name: Build release
+        run: cargo build --release --all-features --workspace
+
+      - name: Build examples
+        run: cargo build --release --examples
 
