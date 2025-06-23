@@ -81,6 +81,8 @@ You can specify a custom port for the BRP server:
 
 **Why this exists:** Bevy's built-in `bevy/registry/schema` method provides type schemas, but doesn't show the actual JSON format needed for BRP operations. This method bridges that gap by providing the exact data structures required.
 
+Without `bevy_extras/discover_format` what happens is the coding agent will try the BRP methods such as `bevy/spawn` and it will have to do trial and error, parsing error messages until it finally works. And it doesn't always work. With `bevy_extras/discover_format` providing the type information directly, the coding agent can avoid these issues and interact with the BRP much more efficiently.
+
 **Example:**
 ```bash
 curl -X POST http://localhost:15702/brp_extras/discover_format \
