@@ -14,9 +14,6 @@ categories = [
   "development-tools::debugging",
 ]
 
-[lints.rust]
-missing_docs = "deny"
-
 [dependencies]
 bevy = { version = "0.16.1", default-features = false, features = [
   "bevy_remote",
@@ -33,3 +30,21 @@ serde = { version = "1.0", features = ["derive"] }
 
 [dev-dependencies]
 reqwest = { version = "0.12", features = ["blocking", "json"] }
+
+[lints.rust]
+missing_docs = "deny"
+
+[lints.clippy]
+# Our strict lints
+expect_used = "deny"
+panic = "deny"
+unwrap_used = "deny"
+
+# Enable lint groups as errors (with lower priority so allows can override)
+all = { level = "deny", priority = -1 }
+cargo = { level = "deny", priority = -1 }
+nursery = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+
+# Allow specific lints that conflict with Bevy patterns
+multiple_crate_versions = "allow"
