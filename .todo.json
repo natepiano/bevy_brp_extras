@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "content": "Set terminal title: echo -e \"\\e]2;Implementation: KeyCode macro and duration validation\\007\"",
+    "content": "Set terminal title: echo -e \"\\e]2;Implementation: Simplify keyboard API to single-call press-hold-release\\007\"",
     "status": "pending",
     "priority": "high",
     "notes": ""
@@ -15,7 +15,7 @@
   },
   {
     "id": "3",
-    "content": "bevy_brp_extras: Replace 146-line to_key_code match with macro implementation",
+    "content": "bevy_brp_extras: Update SendKeysRequest struct - remove press field, make duration_ms required with default",
     "status": "pending",
     "priority": "high",
     "notes": ""
@@ -29,7 +29,7 @@
   },
   {
     "id": "5",
-    "content": "bevy_brp_extras: Add MAX_KEY_DURATION_MS constant (60_000ms = 1 minute)",
+    "content": "bevy_brp_extras: Update SendKeysResponse struct - remove action field, add duration_ms field",
     "status": "pending",
     "priority": "high",
     "notes": ""
@@ -43,7 +43,7 @@
   },
   {
     "id": "7",
-    "content": "bevy_brp_extras: Add duration validation in send_keys_handler",
+    "content": "bevy_brp_extras: Add default_duration constant (100ms) and update validation logic",
     "status": "pending",
     "priority": "high",
     "notes": ""
@@ -57,7 +57,7 @@
   },
   {
     "id": "9",
-    "content": "bevy_brp_extras: Add test case for duration validation exceeding maximum",
+    "content": "bevy_brp_extras: Rewrite send_keys_handler for always press-hold-release cycle",
     "status": "pending",
     "priority": "high",
     "notes": ""
@@ -71,69 +71,132 @@
   },
   {
     "id": "11",
-    "content": "bevy_brp_mcp: Update help text to document 1-minute maximum duration",
+    "content": "bevy_brp_extras: Update all keyboard tests to use new API (remove press parameter)",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "12",
-    "content": "bevy_brp_mcp: Build and fix any compile errors and warnings",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "13",
-    "content": "Update CHANGELOG.md for both projects noting duration limit",
+    "content": "bevy_brp_extras: Add new test cases for default duration behavior",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "14",
-    "content": "Run cargo clippy --workspace --all-targets --all-features",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "15",
-    "content": "Fix any clippy issues (no dead code marks, no unused _)",
+    "content": "bevy_brp_mcp: Update tool definition - remove press parameter, update duration_ms description",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "16",
-    "content": "Run cargo +nightly fmt",
+    "content": "bevy_brp_mcp: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "17",
-    "content": "Run cargo nextest run",
+    "content": "bevy_brp_mcp: Rewrite help text with new API examples and remove press/release documentation",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "18",
-    "content": "If test issues, STOP and review with user",
+    "content": "bevy_brp_mcp: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "19",
-    "content": "Task subagent for code review focusing on duplication and complexity (read-only)",
+    "content": "bevy_brp_extras: Update examples/extras_test.rs to work with new API",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "20",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "21",
+    "content": "Update brp_test.md keyboard test commands to use new single-call API",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "22",
+    "content": "Update CHANGELOG.md for both projects noting the breaking API change",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "23",
+    "content": "Run cargo clippy --workspace --all-targets --all-features",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "24",
+    "content": "Fix any clippy issues (no dead code marks, no unused _)",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "25",
+    "content": "Run cargo +nightly fmt",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "26",
+    "content": "Run cargo nextest run",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "27",
+    "content": "If test issues, STOP and review with user",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "28",
+    "content": "Task subagent for code review focusing on duplication and complexity (read-only)",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "29",
     "content": "Review subagent suggestions with user",
     "status": "pending",
     "priority": "high",
