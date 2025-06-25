@@ -256,7 +256,8 @@ fn track_keyboard_input(
 
         // Always update last_keys to show what was pressed
         if !history.active_keys.is_empty() {
-            history.last_keys = history.active_keys.clone();
+            let active = history.active_keys.clone();
+            history.last_keys = active;
         }
     }
 }
@@ -291,7 +292,7 @@ fn update_keyboard_display(
         };
 
         let duration_display = if let Some(ms) = history.last_duration_ms {
-            format!("{}ms", ms)
+            format!("{ms}ms")
         } else if history.active_keys.is_empty() {
             "N/A".to_string()
         } else {

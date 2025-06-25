@@ -2,13 +2,27 @@
 
 use bevy::prelude::*;
 use bevy::remote::{BrpError, BrpResult, error_codes};
+#[cfg(feature = "png")]
 use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
-use serde_json::{Value, json};
+use serde_json::Value;
+#[cfg(feature = "png")]
+use serde_json::json;
 
 /// Handler for screenshot requests
 ///
 /// Takes a screenshot of the primary window and saves it to the specified path.
 /// The path parameter must be provided in the request.
+#[cfg(not(feature = "png"))]
+pub fn handler(In(_params): In<Option<Value>>, _world: &mut World) -> BrpResult {
+    Err(BrpError {
+        code:    error_codes::INTERNAL_ERROR,
+        message: "PNG support not available. Enable the 'png' feature in your Bevy dependency"
+            .to_string(),
+        data:    None,
+    })
+}
+
+#[cfg(feature = "png")]
 pub fn handler(In(params): In<Option<Value>>, world: &mut World) -> BrpResult {
     // Get the path from params
     let path = params

@@ -6,7 +6,7 @@ use serde_json::json;
 #[cfg(test)]
 #[allow(clippy::expect_used)]
 mod keyboard_tests {
-    use bevy_brp_extras::{KeyCodeWrapper, ListKeyCodesResponse, SendKeysResponse};
+    use bevy_brp_extras::{KeyCodeWrapper, SendKeysResponse};
     use strum::IntoEnumIterator;
 
     use super::*;
@@ -118,58 +118,6 @@ mod keyboard_tests {
                 serde_json::from_value(response_value).expect("Failed to deserialize response");
             assert_eq!(response.duration_ms, 500);
             assert_eq!(response.keys_sent.len(), 2);
-        }
-    }
-
-    /// Test `list_key_codes` returns all expected keys with correct categories
-    #[test]
-    fn test_list_key_codes() {
-        let mut app = App::new();
-        app.add_plugins(MinimalPlugins);
-
-        let result = bevy_brp_extras::keyboard::list_key_codes_handler(
-            bevy::ecs::system::In(None),
-            app.world_mut(),
-        );
-
-        assert!(result.is_ok());
-
-        if let Ok(response_value) = result {
-            let response: ListKeyCodesResponse =
-                serde_json::from_value(response_value).expect("Failed to deserialize response");
-
-            // Should have all the key codes
-            assert_eq!(response.total, response.key_codes.len());
-            assert!(response.total > 100); // We have over 100 key codes
-
-            // Check that categories are properly assigned
-            let categories: std::collections::HashSet<&str> = response
-                .key_codes
-                .iter()
-                .map(|info| info.category.as_str())
-                .collect();
-
-            assert!(categories.contains(&"Letters"));
-            assert!(categories.contains(&"Digits"));
-            assert!(categories.contains(&"Function"));
-            assert!(categories.contains(&"Modifiers"));
-            assert!(categories.contains(&"Navigation"));
-            assert!(categories.contains(&"Editing"));
-            assert!(categories.contains(&"Numpad"));
-            assert!(categories.contains(&"Special"));
-            assert!(categories.contains(&"Punctuation"));
-
-            // Check some specific keys have correct categories
-            for key_info in &response.key_codes {
-                match key_info.name.as_str() {
-                    "KeyA" => assert_eq!(key_info.category, "Letters"),
-                    "Digit0" => assert_eq!(key_info.category, "Digits"),
-                    "F1" => assert_eq!(key_info.category, "Function"),
-                    "ShiftLeft" => assert_eq!(key_info.category, "Modifiers"),
-                    "Space" => assert_eq!(key_info.category, "Editing"),
-                    _ => {}
-                }
-            }
         }
     }
 

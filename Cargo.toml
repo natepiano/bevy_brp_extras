@@ -39,6 +39,7 @@ reqwest = { version = "0.12", features = ["blocking", "json"] }
 
 [lints.rust]
 missing_docs = "deny"
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(feature, values("png"))'] }
 
 [lints.clippy]
 # Our strict lints

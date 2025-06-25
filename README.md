@@ -24,7 +24,6 @@ Currently provides five BRP methods:
 - `brp_extras/shutdown` - Gracefully shutdown the application
 - `brp_extras/discover_format` - Get correct data formats for BRP spawn/insert/mutation operations
 - `brp_extras/send_keys` - Send keyboard input to the application
-- `brp_extras/list_key_codes` - List all available keyboard key codes
 
 ## Usage
 

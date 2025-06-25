@@ -9,7 +9,6 @@ use bevy::prelude::*;
 use bevy::remote::{BrpError, BrpResult, error_codes};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
-use strum::IntoEnumIterator;
 use strum_macros::{Display, EnumIter, EnumString};
 
 /// Maximum duration for holding keys in milliseconds (1 minute)
@@ -178,158 +177,149 @@ pub enum KeyCodeWrapper {
     Slash,
 }
 
-/// Macro to generate key code mappings
-macro_rules! key_code_mapping {
-    ($self:expr, $($variant:ident),* $(,)?) => {
-        match $self {
-            $(Self::$variant => KeyCode::$variant,)*
-        }
-    };
-}
-
 impl KeyCodeWrapper {
     /// Convert the wrapper to a Bevy `KeyCode`
     #[must_use]
+    #[allow(clippy::too_many_lines)]
     pub const fn to_key_code(self) -> KeyCode {
-        key_code_mapping!(
-            self,
+        match self {
             // Letters
-            KeyA,
-            KeyB,
-            KeyC,
-            KeyD,
-            KeyE,
-            KeyF,
-            KeyG,
-            KeyH,
-            KeyI,
-            KeyJ,
-            KeyK,
-            KeyL,
-            KeyM,
-            KeyN,
-            KeyO,
-            KeyP,
-            KeyQ,
-            KeyR,
-            KeyS,
-            KeyT,
-            KeyU,
-            KeyV,
-            KeyW,
-            KeyX,
-            KeyY,
-            KeyZ,
+            Self::KeyA => KeyCode::KeyA,
+            Self::KeyB => KeyCode::KeyB,
+            Self::KeyC => KeyCode::KeyC,
+            Self::KeyD => KeyCode::KeyD,
+            Self::KeyE => KeyCode::KeyE,
+            Self::KeyF => KeyCode::KeyF,
+            Self::KeyG => KeyCode::KeyG,
+            Self::KeyH => KeyCode::KeyH,
+            Self::KeyI => KeyCode::KeyI,
+            Self::KeyJ => KeyCode::KeyJ,
+            Self::KeyK => KeyCode::KeyK,
+            Self::KeyL => KeyCode::KeyL,
+            Self::KeyM => KeyCode::KeyM,
+            Self::KeyN => KeyCode::KeyN,
+            Self::KeyO => KeyCode::KeyO,
+            Self::KeyP => KeyCode::KeyP,
+            Self::KeyQ => KeyCode::KeyQ,
+            Self::KeyR => KeyCode::KeyR,
+            Self::KeyS => KeyCode::KeyS,
+            Self::KeyT => KeyCode::KeyT,
+            Self::KeyU => KeyCode::KeyU,
+            Self::KeyV => KeyCode::KeyV,
+            Self::KeyW => KeyCode::KeyW,
+            Self::KeyX => KeyCode::KeyX,
+            Self::KeyY => KeyCode::KeyY,
+            Self::KeyZ => KeyCode::KeyZ,
             // Digits
-            Digit0,
-            Digit1,
-            Digit2,
-            Digit3,
-            Digit4,
-            Digit5,
-            Digit6,
-            Digit7,
-            Digit8,
-            Digit9,
+            Self::Digit0 => KeyCode::Digit0,
+            Self::Digit1 => KeyCode::Digit1,
+            Self::Digit2 => KeyCode::Digit2,
+            Self::Digit3 => KeyCode::Digit3,
+            Self::Digit4 => KeyCode::Digit4,
+            Self::Digit5 => KeyCode::Digit5,
+            Self::Digit6 => KeyCode::Digit6,
+            Self::Digit7 => KeyCode::Digit7,
+            Self::Digit8 => KeyCode::Digit8,
+            Self::Digit9 => KeyCode::Digit9,
             // Function keys
-            F1,
-            F2,
-            F3,
-            F4,
-            F5,
-            F6,
-            F7,
-            F8,
-            F9,
-            F10,
-            F11,
-            F12,
-            F13,
-            F14,
-            F15,
-            F16,
-            F17,
-            F18,
-            F19,
-            F20,
-            F21,
-            F22,
-            F23,
-            F24,
+            Self::F1 => KeyCode::F1,
+            Self::F2 => KeyCode::F2,
+            Self::F3 => KeyCode::F3,
+            Self::F4 => KeyCode::F4,
+            Self::F5 => KeyCode::F5,
+            Self::F6 => KeyCode::F6,
+            Self::F7 => KeyCode::F7,
+            Self::F8 => KeyCode::F8,
+            Self::F9 => KeyCode::F9,
+            Self::F10 => KeyCode::F10,
+            Self::F11 => KeyCode::F11,
+            Self::F12 => KeyCode::F12,
+            Self::F13 => KeyCode::F13,
+            Self::F14 => KeyCode::F14,
+            Self::F15 => KeyCode::F15,
+            Self::F16 => KeyCode::F16,
+            Self::F17 => KeyCode::F17,
+            Self::F18 => KeyCode::F18,
+            Self::F19 => KeyCode::F19,
+            Self::F20 => KeyCode::F20,
+            Self::F21 => KeyCode::F21,
+            Self::F22 => KeyCode::F22,
+            Self::F23 => KeyCode::F23,
+            Self::F24 => KeyCode::F24,
             // Modifiers
-            AltLeft,
-            AltRight,
-            ControlLeft,
-            ControlRight,
-            ShiftLeft,
-            ShiftRight,
-            SuperLeft,
-            SuperRight,
+            Self::AltLeft => KeyCode::AltLeft,
+            Self::AltRight => KeyCode::AltRight,
+            Self::ControlLeft => KeyCode::ControlLeft,
+            Self::ControlRight => KeyCode::ControlRight,
+            Self::ShiftLeft => KeyCode::ShiftLeft,
+            Self::ShiftRight => KeyCode::ShiftRight,
+            Self::SuperLeft => KeyCode::SuperLeft,
+            Self::SuperRight => KeyCode::SuperRight,
             // Navigation
-            ArrowDown,
-            ArrowLeft,
-            ArrowRight,
-            ArrowUp,
-            End,
-            Home,
-            PageDown,
-            PageUp,
+            Self::ArrowDown => KeyCode::ArrowDown,
+            Self::ArrowLeft => KeyCode::ArrowLeft,
+            Self::ArrowRight => KeyCode::ArrowRight,
+            Self::ArrowUp => KeyCode::ArrowUp,
+            Self::End => KeyCode::End,
+            Self::Home => KeyCode::Home,
+            Self::PageDown => KeyCode::PageDown,
+            Self::PageUp => KeyCode::PageUp,
             // Editing
-            Backspace,
-            Delete,
-            Enter,
-            Escape,
-            Insert,
-            Space,
-            Tab,
+            Self::Backspace => KeyCode::Backspace,
+            Self::Delete => KeyCode::Delete,
+            Self::Enter => KeyCode::Enter,
+            Self::Escape => KeyCode::Escape,
+            Self::Insert => KeyCode::Insert,
+            Self::Space => KeyCode::Space,
+            Self::Tab => KeyCode::Tab,
             // Numpad
-            Numpad0,
-            Numpad1,
-            Numpad2,
-            Numpad3,
-            Numpad4,
-            Numpad5,
-            Numpad6,
-            Numpad7,
-            Numpad8,
-            Numpad9,
-            NumpadAdd,
-            NumpadDivide,
-            NumpadMultiply,
-            NumpadSubtract,
-            NumpadDecimal,
-            NumpadEnter,
+            Self::Numpad0 => KeyCode::Numpad0,
+            Self::Numpad1 => KeyCode::Numpad1,
+            Self::Numpad2 => KeyCode::Numpad2,
+            Self::Numpad3 => KeyCode::Numpad3,
+            Self::Numpad4 => KeyCode::Numpad4,
+            Self::Numpad5 => KeyCode::Numpad5,
+            Self::Numpad6 => KeyCode::Numpad6,
+            Self::Numpad7 => KeyCode::Numpad7,
+            Self::Numpad8 => KeyCode::Numpad8,
+            Self::Numpad9 => KeyCode::Numpad9,
+            Self::NumpadAdd => KeyCode::NumpadAdd,
+            Self::NumpadDivide => KeyCode::NumpadDivide,
+            Self::NumpadMultiply => KeyCode::NumpadMultiply,
+            Self::NumpadSubtract => KeyCode::NumpadSubtract,
+            Self::NumpadDecimal => KeyCode::NumpadDecimal,
+            Self::NumpadEnter => KeyCode::NumpadEnter,
             // Media and special
-            AudioVolumeDown,
-            AudioVolumeMute,
-            AudioVolumeUp,
-            BrowserBack,
-            BrowserForward,
-            BrowserHome,
-            BrowserRefresh,
-            BrowserSearch,
-            CapsLock,
-            NumLock,
-            ScrollLock,
-            PrintScreen,
-            Pause,
-            MediaPlayPause,
-            MediaStop,
-            MediaTrackNext,
-            MediaTrackPrevious,
+            Self::AudioVolumeDown => KeyCode::AudioVolumeDown,
+            Self::AudioVolumeMute => KeyCode::AudioVolumeMute,
+            Self::AudioVolumeUp => KeyCode::AudioVolumeUp,
+            Self::BrowserBack => KeyCode::BrowserBack,
+            Self::BrowserForward => KeyCode::BrowserForward,
+            Self::BrowserHome => KeyCode::BrowserHome,
+            Self::BrowserRefresh => KeyCode::BrowserRefresh,
+            Self::BrowserSearch => KeyCode::BrowserSearch,
+            Self::CapsLock => KeyCode::CapsLock,
+            Self::NumLock => KeyCode::NumLock,
+            Self::ScrollLock => KeyCode::ScrollLock,
+            Self::PrintScreen => KeyCode::PrintScreen,
+            Self::Pause => KeyCode::Pause,
+            Self::MediaPlayPause => KeyCode::MediaPlayPause,
+            Self::MediaStop => KeyCode::MediaStop,
+            Self::MediaTrackNext => KeyCode::MediaTrackNext,
+            Self::MediaTrackPrevious => KeyCode::MediaTrackPrevious,
             // Punctuation and symbols
-            Backquote,
-            Backslash,
-            BracketLeft,
-            BracketRight,
-            Comma,
-            Equal,
-            Minus,
-            Period,
-            Quote,
-            Semicolon,
-            Slash,
-        )
+            Self::Backquote => KeyCode::Backquote,
+            Self::Backslash => KeyCode::Backslash,
+            Self::BracketLeft => KeyCode::BracketLeft,
+            Self::BracketRight => KeyCode::BracketRight,
+            Self::Comma => KeyCode::Comma,
+            Self::Equal => KeyCode::Equal,
+            Self::Minus => KeyCode::Minus,
+            Self::Period => KeyCode::Period,
+            Self::Quote => KeyCode::Quote,
+            Self::Semicolon => KeyCode::Semicolon,
+            Self::Slash => KeyCode::Slash,
+        }
     }
 
     /// Get the category for this key code
@@ -521,15 +511,6 @@ pub fn send_keys_handler(In(params): In<Option<Value>>, world: &mut World) -> Br
     }))
 }
 
-/// Response structure for `list_key_codes`
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ListKeyCodesResponse {
-    /// List of available key codes with their categories
-    pub key_codes: Vec<KeyCodeInfo>,
-    /// Total number of key codes
-    pub total:     usize,
-}
-
 /// Information about a key code
 #[derive(Debug, Serialize, Deserialize)]
 pub struct KeyCodeInfo {
@@ -537,27 +518,6 @@ pub struct KeyCodeInfo {
     pub name:     String,
     /// The category of the key (e.g., "Letters", "Modifiers")
     pub category: String,
-}
-
-/// Handler for `list_key_codes` requests
-///
-/// Returns all available key codes organized by category
-///
-/// # Errors
-///
-/// This function is marked as infallible but returns `BrpResult` for API consistency
-#[allow(clippy::unnecessary_wraps)]
-pub fn list_key_codes_handler(In(_): In<Option<Value>>, _world: &mut World) -> BrpResult {
-    let key_codes: Vec<KeyCodeInfo> = KeyCodeWrapper::iter()
-        .map(|key| KeyCodeInfo {
-            name:     key.to_string(),
-            category: key.category().to_string(),
-        })
-        .collect();
-
-    let total = key_codes.len();
-
-    Ok(json!(ListKeyCodesResponse { key_codes, total }))
 }
 
 /// Parse a string into a `KeyCode`

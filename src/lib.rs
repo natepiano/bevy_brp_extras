@@ -21,7 +21,6 @@
 //! - `brp_extras/shutdown`: Gracefully shutdown the app
 //! - `brp_extras/discover_format`: Discover component format information
 //! - `brp_extras/send_keys`: Send keyboard input
-//! - `brp_extras/list_key_codes`: List available key codes
 
 mod discovery;
 mod format;
@@ -35,8 +34,7 @@ pub use discovery::{
 };
 pub use format::{FieldInfo, FormatInfo, MutationInfo, SpawnInfo};
 pub use keyboard::{
-    KeyCodeInfo, KeyCodeWrapper, ListKeyCodesResponse, SendKeysRequest, SendKeysResponse,
-    TimedKeyRelease,
+    KeyCodeInfo, KeyCodeWrapper, SendKeysRequest, SendKeysResponse, TimedKeyRelease,
 };
 pub use plugin::BrpExtrasPlugin;
 
