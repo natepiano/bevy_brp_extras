@@ -20,9 +20,12 @@
 //! - `brp_extras/screenshot`: Capture a screenshot
 //! - `brp_extras/shutdown`: Gracefully shutdown the app
 //! - `brp_extras/discover_format`: Discover component format information
+//! - `brp_extras/send_keys`: Send keyboard input
+//! - `brp_extras/list_key_codes`: List available key codes
 
 mod discovery;
 mod format;
+pub mod keyboard;
 mod plugin;
 mod screenshot;
 mod shutdown;
@@ -31,6 +34,10 @@ pub use discovery::{
     discover_component_format, discover_multiple_formats, get_common_component_types,
 };
 pub use format::{FieldInfo, FormatInfo, MutationInfo, SpawnInfo};
+pub use keyboard::{
+    KeyCodeInfo, KeyCodeWrapper, ListKeyCodesResponse, SendKeysRequest, SendKeysResponse,
+    TimedKeyRelease,
+};
 pub use plugin::BrpExtrasPlugin;
 
 /// Default port for remote control connections

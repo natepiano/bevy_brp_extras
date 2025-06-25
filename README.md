@@ -14,18 +14,17 @@ bevy_brp_extras does two things
 
 | bevy | bevy_brp_extras |
 |------|-----------------|
-| 0.16 | 0.1..0.2        |
-
-The bevy_brp_extras crate follows Bevy's version numbering and releases new versions for each Bevy release.
-The table above shows which versions of bevy_brp_extras are compatible with which versions of Bevy.
+| 0.16 | 0.1 - 0.2       |
 
 
 ## Features
 
-Currently provides three BRP methods:
+Currently provides five BRP methods:
 - `brp_extras/screenshot` - Capture screenshots of the primary window
 - `brp_extras/shutdown` - Gracefully shutdown the application
 - `brp_extras/discover_format` - Get correct data formats for BRP spawn/insert/mutation operations
+- `brp_extras/send_keys` - Send keyboard input to the application
+- `brp_extras/list_key_codes` - List all available keyboard key codes
 
 ## Usage
 
@@ -66,6 +65,13 @@ You can specify a custom port for the BRP server:
   - `path` (string, required): File path where the screenshot should be saved
 - **Returns**: Success status with the absolute path where the screenshot will be saved
 
+**Important**: Your Bevy app must have the `png` feature enabled for screenshots to work:
+```toml
+[dependencies]
+bevy = { version = "0.16", features = ["png"] }
+```
+Without this feature, screenshot files will be created but will be 0 bytes as Bevy cannot encode the image data.
+
 **Note**: If you're not using this with [bevy_brp_mcp](https://github.com/natepiano/bevy_brp_mcp), you'll need to tell your AI agent that this method requires a `path` parameter, or let it discover this by trying the method and getting an error message.
 
 ### Shutdown
@@ -96,13 +102,47 @@ curl -X POST http://localhost:15702/brp_extras/discover_format \
 - `spawn_format`: How to structure data for `bevy/spawn` operations
 - `mutation_info`: Available mutation paths and formats for `bevy/mutate_component` operations
 
+### Send Keys
+- **Method**: `brp_extras/send_keys`
+- **Parameters**:
+  - `keys` (array of strings, required): Key codes to send (e.g., `["KeyA", "Space", "Enter"]`)
+  - `duration_ms` (number, optional): How long to hold keys before releasing in milliseconds (default: 100, max: 60000)
+- **Returns**: Success status with the keys sent and duration used
+
+Simulates keyboard input by sending press and release events for the specified keys. Keys are pressed simultaneously and held for the specified duration before being released.
+
+**Example:**
+```bash
+# Send "hi" by pressing H and I keys
+curl -X POST http://localhost:15702/brp_extras/send_keys \
+  -H "Content-Type: application/json" \
+  -d '{"keys": ["KeyH", "KeyI"]}'
+
+# Hold space key for 2 seconds
+curl -X POST http://localhost:15702/brp_extras/send_keys \
+  -H "Content-Type: application/json" \
+  -d '{"keys": ["Space"], "duration_ms": 2000}'
+```
+
+### List Key Codes
+- **Method**: `brp_extras/list_key_codes`
+- **Parameters**: None
+- **Returns**: Array of available key codes with their categories
+
+Lists all available Bevy `KeyCode` values that can be used with the `send_keys` method. Key codes are organized by category (Letters, Digits, Function keys, Modifiers, Navigation, etc.).
+
+**Example:**
+```bash
+curl -X POST http://localhost:15702/brp_extras/list_key_codes
+```
+
 ## Integration with bevy_brp_mcp
 
 This crate is designed to work seamlessly with [bevy_brp_mcp](https://github.com/natepiano/bevy_brp_mcp), which provides a Model Context Protocol (MCP) server for controlling Bevy apps. When both are used together:
 
 1. Add `BrpExtrasPlugin` to your Bevy app
 2. Use `bevy_brp_mcp` with your AI coding assistant
-3. The additional methods will be automatically discovered and made available
+3. The additional methods will be automatically discovered and made available in the MCP server so you won't have to manually implement or execute (as with the curl examples above)
 
 ## License
 

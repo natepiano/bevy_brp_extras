@@ -4,7 +4,7 @@ use bevy::prelude::*;
 use bevy::remote::RemotePlugin;
 use bevy::remote::http::RemoteHttpPlugin;
 
-use crate::{DEFAULT_REMOTE_PORT, discovery, screenshot, shutdown};
+use crate::{DEFAULT_REMOTE_PORT, discovery, keyboard, screenshot, shutdown};
 
 /// Command prefix for `brp_extras` methods
 const EXTRAS_COMMAND_PREFIX: &str = "brp_extras/";
@@ -15,6 +15,8 @@ const EXTRAS_COMMAND_PREFIX: &str = "brp_extras/";
 /// - `brp_extras/screenshot`: Capture screenshots
 /// - `brp_extras/shutdown`: Gracefully shutdown the app
 /// - `brp_extras/discover_format`: Discover component format information
+/// - `brp_extras/send_keys`: Send keyboard input
+/// - `brp_extras/list_key_codes`: List available key codes
 #[allow(non_upper_case_globals)]
 pub const BrpExtrasPlugin: BrpExtrasPlugin = BrpExtrasPlugin::new();
 
@@ -50,11 +52,12 @@ impl Plugin for BrpExtrasPlugin {
             "Registering BRP extras methods with prefix: {}",
             EXTRAS_COMMAND_PREFIX
         );
-        let screenshot_method = format!("{EXTRAS_COMMAND_PREFIX}screenshot");
-        info!("Registering screenshot method as: {}", screenshot_method);
 
         let remote_plugin = RemotePlugin::default()
-            .with_method(screenshot_method, screenshot::handler)
+            .with_method(
+                format!("{EXTRAS_COMMAND_PREFIX}screenshot"),
+                screenshot::handler,
+            )
             .with_method(
                 format!("{EXTRAS_COMMAND_PREFIX}shutdown"),
                 shutdown::handler,
@@ -62,6 +65,14 @@ impl Plugin for BrpExtrasPlugin {
             .with_method(
                 format!("{EXTRAS_COMMAND_PREFIX}discover_format"),
                 discovery::handler,
+            )
+            .with_method(
+                format!("{EXTRAS_COMMAND_PREFIX}send_keys"),
+                keyboard::send_keys_handler,
+            )
+            .with_method(
+                format!("{EXTRAS_COMMAND_PREFIX}list_key_codes"),
+                keyboard::list_key_codes_handler,
             );
 
         let http_plugin = self.port.map_or_else(RemoteHttpPlugin::default, |port| {
@@ -69,6 +80,9 @@ impl Plugin for BrpExtrasPlugin {
         });
 
         app.add_plugins((remote_plugin, http_plugin));
+
+        // Add the system to process timed key releases
+        app.add_systems(Update, keyboard::process_timed_key_releases);
 
         let port = self.port.unwrap_or(DEFAULT_REMOTE_PORT);
         app.add_systems(Startup, move |_world: &mut World| {
@@ -83,4 +97,6 @@ fn log_initialization(port: u16) {
     trace!("  - brp_extras/screenshot - Take a screenshot");
     trace!("  - brp_extras/shutdown - Shutdown the app");
     trace!("  - brp_extras/discover_format - Discover component format information");
+    trace!("  - brp_extras/send_keys - Send keyboard input");
+    trace!("  - brp_extras/list_key_codes - List available key codes");
 }
