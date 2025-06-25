@@ -1,133 +1,210 @@
 [
   {
     "id": "1",
-    "content": "Run echo -e \"\\e]2;Implementation: Keyboard Input Display Example\\007\" to set terminal title",
+    "content": "Set terminal title: echo -e \"\\e]2;Implementation: Add keyboard duration support and refactor\\007\"",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "2",
-    "content": "MetaTodo: Do not deviate from the plan - if you think you need to deviate, STOP and ask the user for guidance",
+    "content": "META: Do not deviate from the plan - if you think you need to deviate, STOP and ask the user for guidance",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "3",
-    "content": "Rename format_test.rs to extras_test.rs using git mv",
+    "content": "bevy_brp_extras: Add duration_ms field to SendKeysRequest struct",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "4",
-    "content": "Build and fix any compile errors and warnings after renaming",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings (no dead code, no unused _)",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "5",
-    "content": "Create KeyboardInputHistory resource struct to track keyboard input state",
+    "content": "bevy_brp_extras: Implement duration logic in send_keys_handler with timer-based release",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "6",
-    "content": "Build and fix any compile errors and warnings after adding resource",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "7",
-    "content": "Add UI text display system with centered text node",
+    "content": "bevy_brp_extras: Make KeyCodeWrapper enum public for test access",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "8",
-    "content": "Build and fix any compile errors and warnings after adding UI",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "9",
-    "content": "Implement keyboard event tracking system with duration calculation",
+    "content": "bevy_brp_extras: Refactor test_parse_all_key_codes to use EnumIter instead of hardcoded list",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "10",
-    "content": "Build and fix any compile errors and warnings after adding tracking system",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "11",
-    "content": "Update example structure with new systems and logging",
+    "content": "bevy_brp_extras: Add category() method to KeyCodeWrapper enum",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "12",
-    "content": "Build and fix any compile errors and warnings after final updates",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "13",
-    "content": "Run cargo clippy --workspace --all-targets --all-features",
+    "content": "bevy_brp_extras: Replace get_key_category function with enum method calls",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "14",
-    "content": "Fix any clippy issues without using _ prefix or dead_code",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "15",
-    "content": "Run cargo +nightly fmt",
+    "content": "bevy_brp_extras: Split validate_and_create_events into validate_keys and create_keyboard_events",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "16",
-    "content": "Run cargo nextest run",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "17",
-    "content": "If there are test issues, STOP and review them with the user",
+    "content": "bevy_brp_extras: Add tests for duration parameter functionality",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "18",
-    "content": "Task a new subagent to do a code review focusing on duplication and complexity (read-only)",
+    "content": "bevy_brp_extras: Build and fix any compile errors and warnings",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "19",
-    "content": "When subagent returns, STOP and review suggested changes with the user",
+    "content": "bevy_brp_mcp: Update tool definition to add duration_ms parameter",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "20",
+    "content": "bevy_brp_mcp: Build and fix any compile errors and warnings",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "21",
+    "content": "bevy_brp_mcp: Update help text to document duration usage",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "22",
+    "content": "bevy_brp_mcp: Build and fix any compile errors and warnings",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "23",
+    "content": "Update CHANGELOG.md for both projects with duration feature",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "24",
+    "content": "Run cargo clippy --workspace --all-targets --all-features",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "25",
+    "content": "Fix any clippy issues (no dead code marks, no unused _)",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "26",
+    "content": "Run cargo +nightly fmt",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "27",
+    "content": "Run cargo nextest run",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "28",
+    "content": "If test issues, STOP and review with user",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "29",
+    "content": "Task subagent for code review focusing on duplication and complexity (read-only)",
+    "status": "pending",
+    "priority": "high",
+    "notes": ""
+  },
+  {
+    "id": "30",
+    "content": "Review subagent suggestions with user",
     "status": "pending",
     "priority": "high",
     "notes": ""
