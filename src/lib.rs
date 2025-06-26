@@ -22,6 +22,7 @@
 //! - `brp_extras/discover_format`: Discover component format information
 //! - `brp_extras/send_keys`: Send keyboard input
 
+mod debug_mode;
 mod discovery;
 mod format;
 pub mod keyboard;
