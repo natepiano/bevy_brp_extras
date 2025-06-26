@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "content": "Set terminal title for enum discovery implementation",
+    "content": "Set terminal title for format discovery structural fixes",
     "status": "pending",
     "priority": "high",
     "notes": ""
@@ -15,132 +15,76 @@
   },
   {
     "id": "3",
-    "content": "Add discover_type_format_recursive and generate_primitive_example functions",
+    "content": "Fix tuple struct discovery to handle newtype pattern (single field tuple structs)",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "4",
-    "content": "Build and fix any compile errors and warnings for recursive discovery functions",
+    "content": "Build and fix any compile errors and warnings after tuple struct changes",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "5",
-    "content": "Update generate_spawn_format_for_struct to use recursive discovery and add world parameter",
+    "content": "Fix enum tuple variant format to handle single field pattern correctly",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "6",
-    "content": "Build and fix any compile errors and warnings after struct update",
+    "content": "Build and fix any compile errors and warnings after enum variant changes",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
     "id": "7",
-    "content": "Update generate_spawn_format_for_tuple_struct to use recursive discovery and add world parameter",
-    "status": "pending",
-    "priority": "high",
-    "notes": ""
-  },
-  {
-    "id": "8",
-    "content": "Build and fix any compile errors and warnings after tuple struct update",
-    "status": "pending",
-    "priority": "high",
-    "notes": ""
-  },
-  {
-    "id": "9",
-    "content": "Update generate_mutation_info functions to add world parameter",
-    "status": "pending",
-    "priority": "high",
-    "notes": ""
-  },
-  {
-    "id": "10",
-    "content": "Build and fix any compile errors and warnings after mutation info update",
-    "status": "pending",
-    "priority": "high",
-    "notes": ""
-  },
-  {
-    "id": "11",
-    "content": "Add generate_enum_example function",
-    "status": "pending",
-    "priority": "high",
-    "notes": ""
-  },
-  {
-    "id": "12",
-    "content": "Build and fix any compile errors and warnings for enum function",
-    "status": "pending",
-    "priority": "high",
-    "notes": ""
-  },
-  {
-    "id": "13",
-    "content": "Update discover_component_format to handle enum case and pass world parameter",
-    "status": "pending",
-    "priority": "high",
-    "notes": ""
-  },
-  {
-    "id": "14",
-    "content": "Build and fix any compile errors and warnings after discover_component_format update",
-    "status": "pending",
-    "priority": "high",
-    "notes": ""
-  },
-  {
-    "id": "15",
     "content": "Run cargo clippy --workspace --all-targets --all-features",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
-    "id": "16",
+    "id": "8",
     "content": "Fix any clippy issues",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
-    "id": "17",
+    "id": "9",
     "content": "Run cargo +nightly fmt",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
-    "id": "18",
+    "id": "10",
     "content": "Run cargo nextest run",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
-    "id": "19",
+    "id": "11",
     "content": "If there are test issues, STOP and review them with the user",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
-    "id": "20",
+    "id": "12",
     "content": "Task subagent to do code review focusing on duplication and complexity",
     "status": "pending",
     "priority": "high",
     "notes": ""
   },
   {
-    "id": "21",
+    "id": "13",
     "content": "Review suggested changes from code review with the user",
     "status": "pending",
     "priority": "high",
