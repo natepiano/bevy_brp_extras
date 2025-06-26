@@ -50,7 +50,7 @@ fn main() {
             }),
             ..default()
         }))
-        .add_plugins(BrpExtrasPlugin::new())
+        .add_plugins(BrpExtrasPlugin::new()) // or BrpExtrasPlugin::with_port(8080) for custom port
         .init_resource::<KeyboardInputHistory>()
         .add_systems(Startup, (setup_test_entities, setup_ui))
         .add_systems(
