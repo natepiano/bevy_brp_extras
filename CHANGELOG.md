@@ -5,13 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.1] - 2025-06-25
+## [0.2.1] - Unreleased
 
 ### Added
 - New `brp_extras/send_keys` method for simulating keyboard input
 - Debug mode for format discovery via `brp_extras/set_debug_mode` method
   - Provides detailed diagnostic information about type discovery process
   - Helps troubleshoot format discovery issues with complex types
+- Environment variable port override support via `BRP_PORT`
+  - Allows runtime port configuration without code changes
+  - Priority: `BRP_PORT` environment variable > `with_port()` > default port (15702)
+  - Enables unique port assignment for testing and CI/CD environments
 
 ## [0.2.0] - 2025-06-24
 

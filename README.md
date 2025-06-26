@@ -57,6 +57,14 @@ You can specify a custom port for the BRP server:
 .add_plugins(BrpExtrasPlugin::with_port(8080))
 ```
 
+Alternatively, you can set the port at runtime using the `BRP_PORT` environment variable:
+
+```bash
+BRP_PORT=8080 cargo run
+```
+
+Port priority: `BRP_PORT` environment variable > `with_port()` > default port (15702)
+
 ## BRP Method Details
 
 ### Screenshot
