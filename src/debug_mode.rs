@@ -1,4 +1,4 @@
-//! Debug mode control for bevy_brp_extras
+//! Debug mode control for `bevy_brp_extras`
 //!
 //! This module provides a global debug mode flag that controls whether
 //! detailed debug information is included in BRP responses.
@@ -17,7 +17,7 @@ pub fn is_debug_enabled() -> bool {
     DEBUG_ENABLED.load(Ordering::Relaxed)
 }
 
-/// Handler for the set_debug_mode BRP method
+/// Handler for the `set_debug_mode` BRP method
 pub fn handler(In(params): In<Option<Value>>, _world: &mut World) -> BrpResult {
     // Parse the enabled parameter
     let enabled = if let Some(params) = params {
