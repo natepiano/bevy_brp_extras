@@ -2,100 +2,100 @@
   {
     "id": "extract_registry_helper",
     "content": "Extract get_type_info_from_registry helper function from discover_component_format_with_error_info (lines 29-50)",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "build_after_registry",
     "content": "Build and fix any compile errors and warnings after adding get_type_info_from_registry",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "extract_struct_processor",
     "content": "Extract process_struct_type_info helper function from discover_component_format_with_error_info",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "build_after_struct",
     "content": "Build and fix any compile errors and warnings after adding process_struct_type_info",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "extract_tuple_struct_processor",
     "content": "Extract process_tuple_struct_type_info helper function from discover_component_format_with_error_info",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "build_after_tuple_struct",
     "content": "Build and fix any compile errors and warnings after adding process_tuple_struct_type_info",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "extract_enum_processor",
     "content": "Extract process_enum_type_info helper function from discover_component_format_with_error_info",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "build_after_enum_proc",
     "content": "Build and fix any compile errors and warnings after adding process_enum_type_info",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "extract_other_processor",
     "content": "Extract process_other_type_info helper function from discover_component_format_with_error_info",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "build_after_other",
     "content": "Build and fix any compile errors and warnings after adding process_other_type_info",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "refactor_main_discovery",
     "content": "Refactor discover_component_format_with_error_info to use helper functions",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
-    "notes": ""
+    "notes": "Already completed by previous extractions - function is now ~40 lines"
   },
   {
     "id": "build_after_main_discovery",
     "content": "Build and fix any compile errors and warnings after refactoring discover_component_format_with_error_info",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
-    "notes": ""
+    "notes": "Already completed by previous builds"
   },
   {
     "id": "extract_unit_variant",
     "content": "Extract process_unit_variant helper function from generate_enum_example_with_error_handling",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
     "notes": ""
   },
   {
     "id": "build_after_unit_variant",
     "content": "Build and fix any compile errors and warnings after adding process_unit_variant",
-    "status": "pending",
+    "status": "completed",
     "priority": "medium",
-    "notes": ""
+    "notes": "Approaching context limit - completed 12 of 25 subtasks"
   },
   {
     "id": "extract_tuple_variant",
