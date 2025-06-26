@@ -28,8 +28,8 @@ pub fn discover_component_format(world: &World, type_name: &str) -> Option<Forma
     // Generate format info based on the type structure
     match &type_info {
         TypeInfo::Struct(struct_info) => {
-            let spawn_format = generate_spawn_format_for_struct(struct_info);
-            let mutation_info = generate_mutation_info_for_struct(struct_info);
+            let spawn_format = generate_spawn_format_for_struct(struct_info, world);
+            let mutation_info = generate_mutation_info_for_struct(struct_info, world);
 
             Some(FormatInfo {
                 type_name: type_name.to_string(),
@@ -38,9 +38,24 @@ pub fn discover_component_format(world: &World, type_name: &str) -> Option<Forma
             })
         }
         TypeInfo::TupleStruct(tuple_struct_info) => {
-            let spawn_format = generate_spawn_format_for_tuple_struct(tuple_struct_info);
-            let mutation_info = generate_mutation_info_for_tuple_struct(tuple_struct_info);
+            let spawn_format = generate_spawn_format_for_tuple_struct(tuple_struct_info, world);
+            let mutation_info = generate_mutation_info_for_tuple_struct(tuple_struct_info, world);
 
+            Some(FormatInfo {
+                type_name: type_name.to_string(),
+                spawn_format,
+                mutation_info,
+            })
+        }
+        TypeInfo::Enum(enum_info) => {
+            let spawn_format = SpawnInfo {
+                example:     generate_enum_example(enum_info, world),
+                description: format!("Enum with {} variants", enum_info.variant_len()),
+            };
+            let mutation_info = MutationInfo {
+                fields:      HashMap::new(), // Enums don't have direct mutation paths
+                description: "Enum types must be replaced entirely".to_string(),
+            };
             Some(FormatInfo {
                 type_name: type_name.to_string(),
                 spawn_format,
@@ -65,12 +80,16 @@ pub fn discover_component_format(world: &World, type_name: &str) -> Option<Forma
 }
 
 /// Generate spawn format information for a struct type
-fn generate_spawn_format_for_struct(struct_info: &bevy::reflect::StructInfo) -> SpawnInfo {
+fn generate_spawn_format_for_struct(
+    struct_info: &bevy::reflect::StructInfo,
+    world: &World,
+) -> SpawnInfo {
     let mut example_obj = serde_json::Map::new();
 
     for field in struct_info.iter() {
         let field_name = field.name();
-        let example_value = generate_example_value_for_type(field.type_path());
+        // Use recursive discovery instead of generate_example_value_for_type
+        let example_value = discover_type_format_recursive(world, field.type_path());
         example_obj.insert(field_name.to_string(), example_value);
     }
 
@@ -81,13 +100,16 @@ fn generate_spawn_format_for_struct(struct_info: &bevy::reflect::StructInfo) -> 
 }
 
 /// Generate mutation info for a struct type
-fn generate_mutation_info_for_struct(struct_info: &bevy::reflect::StructInfo) -> MutationInfo {
+fn generate_mutation_info_for_struct(
+    struct_info: &bevy::reflect::StructInfo,
+    world: &World,
+) -> MutationInfo {
     let mut fields = HashMap::new();
 
     for field in struct_info.iter() {
         let field_name = field.name();
         let path = format!(".{field_name}");
-        let example_value = generate_example_value_for_type(field.type_path());
+        let example_value = discover_type_format_recursive(world, field.type_path());
 
         fields.insert(
             field_name.to_string(),
@@ -109,11 +131,23 @@ fn generate_mutation_info_for_struct(struct_info: &bevy::reflect::StructInfo) ->
 /// Generate spawn format information for a tuple struct type
 fn generate_spawn_format_for_tuple_struct(
     tuple_struct_info: &bevy::reflect::TupleStructInfo,
+    world: &World,
 ) -> SpawnInfo {
-    let mut example_array = Vec::new();
+    // For newtype structs (single field), return the field value directly
+    if tuple_struct_info.field_len() == 1 {
+        if let Some(field) = tuple_struct_info.field_at(0) {
+            let example_value = discover_type_format_recursive(world, field.type_path());
+            return SpawnInfo {
+                example:     example_value,
+                description: format!("Newtype wrapper around {}", field.type_path()),
+            };
+        }
+    }
 
+    // For multi-field tuple structs, use array format
+    let mut example_array = Vec::new();
     for field in tuple_struct_info.iter() {
-        let example_value = generate_example_value_for_type(field.type_path());
+        let example_value = discover_type_format_recursive(world, field.type_path());
         example_array.push(example_value);
     }
 
@@ -126,13 +160,14 @@ fn generate_spawn_format_for_tuple_struct(
 /// Generate mutation info for a tuple struct type
 fn generate_mutation_info_for_tuple_struct(
     tuple_struct_info: &bevy::reflect::TupleStructInfo,
+    world: &World,
 ) -> MutationInfo {
     let mut fields = HashMap::new();
 
     for (index, field) in tuple_struct_info.iter().enumerate() {
         let field_key = format!("field_{index}");
         let path = format!(".{index}");
-        let example_value = generate_example_value_for_type(field.type_path());
+        let example_value = discover_type_format_recursive(world, field.type_path());
 
         fields.insert(
             field_key,
@@ -154,8 +189,28 @@ fn generate_mutation_info_for_tuple_struct(
     }
 }
 
-/// Generate example values for common types
-fn generate_example_value_for_type(type_path: &str) -> Value {
+/// Recursively discover format for any type using reflection
+fn discover_type_format_recursive(world: &World, type_path: &str) -> Value {
+    // Try to get type from registry
+    let type_registry = world.resource::<AppTypeRegistry>();
+    let registry = type_registry.read();
+
+    registry.get_with_type_path(type_path).map_or_else(
+        || generate_primitive_example(type_path),
+        |registration| match registration.type_info() {
+            TypeInfo::Struct(info) => generate_struct_example(info, world),
+            TypeInfo::TupleStruct(info) => generate_tuple_struct_example(info, world),
+            TypeInfo::Enum(info) => generate_enum_example(info, world),
+            TypeInfo::List(_) | TypeInfo::Array(_) => json!([]),
+            TypeInfo::Map(_) => json!({}),
+            TypeInfo::Tuple(info) => generate_tuple_example(info, world),
+            _ => generate_primitive_example(type_path),
+        },
+    )
+}
+
+/// Generate examples for primitive/unregistered types
+fn generate_primitive_example(type_path: &str) -> Value {
     match type_path {
         "f32" | "f64" => json!(1.0),
         "i8" | "i16" | "i32" | "i64" | "i128" | "u8" | "u16" | "u32" | "u64" | "u128" | "usize" => {
@@ -167,19 +222,93 @@ fn generate_example_value_for_type(type_path: &str) -> Value {
         path if path.contains("Vec3") => json!([1.0, 2.0, 3.0]),
         path if path.contains("Vec4") => json!([1.0, 2.0, 3.0, 4.0]),
         path if path.contains("Quat") => json!([0.0, 0.0, 0.0, 1.0]),
-        path if path.contains("Transform") => json!({
-            "translation": [0.0, 0.0, 0.0],
-            "rotation": [0.0, 0.0, 0.0, 1.0],
-            "scale": [1.0, 1.0, 1.0]
-        }),
-        path if path.contains("LinearRgba") => json!({
-            "red": 1.0,
-            "green": 1.0,
-            "blue": 1.0,
-            "alpha": 1.0
-        }),
-        path if path.contains("Name") => json!("EntityName"),
         _ => json!(null),
+    }
+}
+
+/// Generate example for struct types
+fn generate_struct_example(struct_info: &bevy::reflect::StructInfo, world: &World) -> Value {
+    let mut example_obj = serde_json::Map::new();
+
+    for field in struct_info.iter() {
+        let field_name = field.name();
+        let example_value = discover_type_format_recursive(world, field.type_path());
+        example_obj.insert(field_name.to_string(), example_value);
+    }
+
+    Value::Object(example_obj)
+}
+
+/// Generate example for tuple struct types
+fn generate_tuple_struct_example(
+    tuple_struct_info: &bevy::reflect::TupleStructInfo,
+    world: &World,
+) -> Value {
+    // For newtype structs (single field), return the field value directly
+    if tuple_struct_info.field_len() == 1 {
+        if let Some(field) = tuple_struct_info.field_at(0) {
+            return discover_type_format_recursive(world, field.type_path());
+        }
+    }
+
+    // For multi-field tuple structs, use array format
+    let mut example_array = Vec::new();
+    for field in tuple_struct_info.iter() {
+        let example_value = discover_type_format_recursive(world, field.type_path());
+        example_array.push(example_value);
+    }
+    Value::Array(example_array)
+}
+
+/// Generate example for tuple types
+fn generate_tuple_example(tuple_info: &bevy::reflect::TupleInfo, world: &World) -> Value {
+    let mut example_array = Vec::new();
+
+    for field in tuple_info.iter() {
+        let example_value = discover_type_format_recursive(world, field.type_path());
+        example_array.push(example_value);
+    }
+
+    Value::Array(example_array)
+}
+
+/// Generate example for enum types
+fn generate_enum_example(enum_info: &bevy::reflect::EnumInfo, world: &World) -> Value {
+    use bevy::reflect::VariantInfo;
+
+    // Pick first variant as example (or could be configurable)
+    if let Some(first_variant) = enum_info.iter().next() {
+        match first_variant {
+            VariantInfo::Unit(v) => json!(v.name()),
+            VariantInfo::Tuple(v) => {
+                // For single-field tuple variants, unwrap the value
+                if v.field_len() == 1 {
+                    if let Some(field) = v.field_at(0) {
+                        let field_value = discover_type_format_recursive(world, field.type_path());
+                        return json!({ v.name(): field_value });
+                    }
+                }
+
+                // For multi-field tuple variants, use array format
+                let fields: Vec<Value> = v
+                    .iter()
+                    .map(|field| discover_type_format_recursive(world, field.type_path()))
+                    .collect();
+                json!({ v.name(): fields })
+            }
+            VariantInfo::Struct(v) => {
+                let mut fields = serde_json::Map::new();
+                for field in v.iter() {
+                    fields.insert(
+                        field.name().to_string(),
+                        discover_type_format_recursive(world, field.type_path()),
+                    );
+                }
+                json!({ v.name(): fields })
+            }
+        }
+    } else {
+        json!({})
     }
 }
 
