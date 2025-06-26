@@ -19,11 +19,12 @@ bevy_brp_extras does two things
 
 ## Features
 
-Currently provides five BRP methods:
+Adds the following Bevvy Remote Protocol methods:
 - `brp_extras/screenshot` - Capture screenshots of the primary window
 - `brp_extras/shutdown` - Gracefully shutdown the application
 - `brp_extras/discover_format` - Get correct data formats for BRP spawn/insert/mutation operations
 - `brp_extras/send_keys` - Send keyboard input to the application
+- `brp_extras/set_debug_mode` - Enable/disable debug information in format discovery
 
 ## Usage
 
@@ -123,17 +124,28 @@ curl -X POST http://localhost:15702/brp_extras/send_keys \
   -d '{"keys": ["Space"], "duration_ms": 2000}'
 ```
 
-### List Key Codes
-- **Method**: `brp_extras/list_key_codes`
-- **Parameters**: None
-- **Returns**: Array of available key codes with their categories
+### Set Debug Mode
+- **Method**: `brp_extras/set_debug_mode`
+- **Parameters**:
+  - `enabled` (boolean, required): Enable or disable debug mode
+- **Returns**: Success status with debug mode state
 
-Lists all available Bevy `KeyCode` values that can be used with the `send_keys` method. Key codes are organized by category (Letters, Digits, Function keys, Modifiers, Navigation, etc.).
+Enables or disables debug information for format discovery operations. When enabled, `brp_extras/discover_format` responses will include a `debug_info` field containing detailed traces of the type discovery process, which helps troubleshoot issues with complex or nested types.
 
 **Example:**
 ```bash
-curl -X POST http://localhost:15702/brp_extras/list_key_codes
+# Enable debug mode
+curl -X POST http://localhost:15702/brp_extras/set_debug_mode \
+  -H "Content-Type: application/json" \
+  -d '{"enabled": true}'
+
+# Disable debug mode
+curl -X POST http://localhost:15702/brp_extras/set_debug_mode \
+  -H "Content-Type: application/json" \
+  -d '{"enabled": false}'
 ```
+
+**When to use:** Enable debug mode when you're having trouble discovering formats for complex types or when you need to understand how the discovery process works for educational purposes.
 
 ## Integration with bevy_brp_mcp
 

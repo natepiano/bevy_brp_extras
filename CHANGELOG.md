@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New `brp_extras/send_keys` method for simulating keyboard input
+- Debug mode for format discovery via `brp_extras/set_debug_mode` method
+  - Provides detailed diagnostic information about type discovery process
+  - Helps troubleshoot format discovery issues with complex types
 
 ## [0.2.0] - 2025-06-24
 
