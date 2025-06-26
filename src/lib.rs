@@ -25,7 +25,8 @@
 mod debug_mode;
 mod discovery;
 mod format;
-pub mod keyboard;
+mod keyboard;
+
 mod plugin;
 mod screenshot;
 mod shutdown;
