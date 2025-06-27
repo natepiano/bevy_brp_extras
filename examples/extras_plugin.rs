@@ -1,22 +1,17 @@
 //! BRP extras test example with keyboard input display
 //!
-//! This example demonstrates:
-//! - Format discovery capabilities of `bevy_brp_extras`
-//! - Keyboard input tracking and display
+//! This example demonstrates bevy_brp_extras functionality including:
+//! - Format discovery
+//! - Screenshot capture
+//! - Keyboard input simulation
+//! - Debug mode toggling
 //!
-//! Run with: cargo run --example `extras_test`
-//!
-//! Once running, you can:
-//! - Test format discovery: curl -X POST <http://localhost:15702/brp_extras/discover_format>
-//! - Send keyboard input: curl -X POST <http://localhost:15702/brp_extras/send_keys>
-//!
-//! The app displays the last keyboard inputs on screen.
+//! Used by the test suite to validate all extras functionality.
 
 use std::time::Instant;
 
 use bevy::input::keyboard::KeyboardInput;
 use bevy::prelude::*;
-use bevy::ui::{AlignItems, JustifyContent, Val};
 use bevy_brp_extras::BrpExtrasPlugin;
 
 /// Resource to track keyboard input history
@@ -40,13 +35,11 @@ struct KeyboardInputHistory {
 #[derive(Component)]
 struct KeyboardDisplayText;
 
-
 fn main() {
-    let brp_plugin = BrpExtrasPlugin::new(); // or BrpExtrasPlugin::with_port(8080) for custom port
+    let brp_plugin = BrpExtrasPlugin::new();
     let (port, _) = brp_plugin.get_effective_port();
 
-
-    info!("Starting app on port {}", port);
+    info!("Starting BRP Extras Test on port {}", port);
 
     App::new()
         .add_plugins(DefaultPlugins.set(bevy::window::WindowPlugin {
@@ -59,39 +52,20 @@ fn main() {
         }))
         .add_plugins(brp_plugin)
         .init_resource::<KeyboardInputHistory>()
+        .insert_resource(CurrentPort(port))
         .add_systems(Startup, (setup_test_entities, setup_ui))
-        .add_systems(
-            Update,
-            (
-                keep_running,
-                track_keyboard_input,
-                update_keyboard_display,
-            ),
-        )
+        .add_systems(Update, (track_keyboard_input, update_keyboard_display))
         .run();
-
-    warn!("App main() function ended normally on port {}", port);
 }
 
-/// Setup various test entities with different component types
-fn setup_test_entities(mut commands: Commands) {
-    print_startup_info();
-    spawn_test_entities(&mut commands);
-    print_usage_instructions();
-}
+/// Resource to store the current port
+#[derive(Resource)]
+struct CurrentPort(u16);
 
-/// Print startup information
-fn print_startup_info() {
-    info!("=== BRP Extras Test Example ===");
-    info!("This example demonstrates:");
-    info!("1. Format discovery for component types");
-    info!("2. Keyboard input tracking with duration calculation");
-    info!("");
-    info!("Setting up test entities for format discovery...");
-}
+/// Setup test entities for format discovery
+fn setup_test_entities(mut commands: Commands, port: Res<CurrentPort>) {
+    info!("Setting up test entities...");
 
-/// Spawn test entities for format discovery
-fn spawn_test_entities(commands: &mut Commands) {
     // Entity with Transform and Name
     commands.spawn((Transform::from_xyz(1.0, 2.0, 3.0), Name::new("TestEntity1")));
 
@@ -101,7 +75,7 @@ fn spawn_test_entities(commands: &mut Commands) {
         Name::new("ScaledEntity"),
     ));
 
-    // Entity with more complex Transform
+    // Entity with complex transform
     commands.spawn((
         Transform {
             translation: Vec3::new(10.0, 20.0, 30.0),
@@ -118,59 +92,18 @@ fn spawn_test_entities(commands: &mut Commands) {
         Visibility::default(),
     ));
 
-    info!("Test entities spawned successfully!");
-}
-
-/// Print usage instructions for the example
-fn print_usage_instructions() {
-    info!("");
-    // Get the current port from environment or default
-    let port = std::env::var("BRP_PORT")
-        .ok()
-        .and_then(|s| s.parse::<u16>().ok())
-        .unwrap_or(15702);
-
-    info!("=== BRP server running on http://localhost:{port} ===");
-    info!("");
-    info!("1. Test format discovery:");
-    info!("  curl -X POST http://localhost:{port}/brp_extras/discover_format \\");
-    info!(r#"    -H "Content-Type: application/json" \"#);
-    info!(r#"    -d '{{"types": ["bevy_transform::components::transform::Transform"]}}'""#);
-    info!("");
-    info!("2. Send keyboard input:");
-    info!("  curl -X POST http://localhost:{port}/brp_extras/send_keys \\");
-    info!(r#"    -H "Content-Type: application/json" \"#);
-    info!(r#"    -d '{{"keys": ["KeyA", "Space"]}}'""#);
-    info!("");
-    info!("  # Keys are automatically released after 100ms (default)");
-    info!("  # Or specify a custom duration:");
-    info!("  curl -X POST http://localhost:{port}/brp_extras/send_keys \\");
-    info!(r#"    -H "Content-Type: application/json" \"#);
-    info!(r#"    -d '{{"keys": ["KeyA", "Space"], "duration_ms": 500}}'""#);
-    info!("");
-    info!("The UI will display the last pressed keys, modifiers, and duration.");
-}
-
-/// Simple system to keep the app running and print periodic status
-#[allow(clippy::needless_pass_by_value)] // Bevy systems require owned Res<T>
-fn keep_running(time: Res<Time>) {
-    // Print periodic status to show the app is alive
-    if time.elapsed_secs() % 10.0 < time.delta_secs() {
-        // Get the current port from environment or default
-        let port = std::env::var("BRP_PORT")
-            .ok()
-            .and_then(|s| s.parse::<u16>().ok())
-            .unwrap_or(15702);
-        info!("App running... BRP server available at http://localhost:{port}");
-    }
+    info!(
+        "Test entities spawned. BRP server running on http://localhost:{}",
+        port.0
+    );
 }
 
 /// Setup UI for keyboard input display
-fn setup_ui(mut commands: Commands) {
-    // Spawn a camera to see the UI
+fn setup_ui(mut commands: Commands, port: Res<CurrentPort>) {
+    // Camera
     commands.spawn(Camera2d);
 
-    // Root UI node that fills the entire screen with a dark background
+    // Background
     commands
         .spawn((
             Node {
@@ -183,7 +116,7 @@ fn setup_ui(mut commands: Commands) {
             BackgroundColor(Color::srgb(0.1, 0.1, 0.1)),
         ))
         .with_children(|parent| {
-            // Container for the text with some padding
+            // Text container
             parent
                 .spawn((
                     Node {
@@ -193,14 +126,12 @@ fn setup_ui(mut commands: Commands) {
                     BackgroundColor(Color::srgb(0.2, 0.2, 0.2)),
                 ))
                 .with_children(|parent| {
-                    // Text node for displaying keyboard input
-                    let port = std::env::var("BRP_PORT")
-                        .ok()
-                        .and_then(|s| s.parse::<u16>().ok())
-                        .unwrap_or(15702);
+                    // Keyboard display text
                     parent.spawn((
-                        Text::new(format!("Waiting for keyboard input...\n\nUse curl to send keys:\ncurl -X POST http://localhost:{port}/brp_extras/send_keys \\\n  -H \"Content-Type: application/json\" \\\n  -d '{{\"keys\": [\"KeyA\", \"Space\"]}}'"))
-                        ,
+                        Text::new(format!(
+                            "Waiting for keyboard input...\n\nUse curl to send keys:\ncurl -X POST http://localhost:{}/brp_extras/send_keys \\\n  -H \"Content-Type: application/json\" \\\n  -d '{{\"keys\": [\"KeyA\", \"Space\"]}}'",
+                            port.0
+                        )),
                         TextFont {
                             font_size: 20.0,
                             ..default()
@@ -212,100 +143,76 @@ fn setup_ui(mut commands: Commands) {
         });
 }
 
-/// Helper function to update modifiers based on key press/release
-fn update_modifiers_from_key(key_str: &str, modifiers: &mut Vec<String>, is_pressed: bool) {
-    const MODIFIER_MAPPINGS: &[(&str, &str)] = &[
-        ("Control", "Ctrl"),
-        ("Shift", "Shift"),
-        ("Alt", "Alt"),
-        ("Super", "Super"),
-    ];
-
-    for &(pattern, display_name) in MODIFIER_MAPPINGS {
-        if key_str.contains(pattern) {
-            if is_pressed {
-                if !modifiers.contains(&display_name.to_string()) {
-                    modifiers.push(display_name.to_string());
-                }
-            } else {
-                modifiers.retain(|m| m != display_name);
-            }
-        }
-    }
-}
-
-/// Track keyboard input events and update history
+/// Track keyboard input events
 fn track_keyboard_input(
     mut events: EventReader<KeyboardInput>,
     mut history: ResMut<KeyboardInputHistory>,
 ) {
     for event in events.read() {
-        // Convert key code to string representation
         let key_str = format!("{:?}", event.key_code);
 
         match event.state {
             bevy::input::ButtonState::Pressed => {
                 info!("Key pressed: {key_str}");
-
-                // Mark as not completed since we have new input
                 history.completed = false;
-
-                // Track press time
                 history.press_time = Some(Instant::now());
 
-                // Update active key list
                 if !history.active_keys.contains(&key_str) {
                     history.active_keys.push(key_str.clone());
                 }
 
                 // Track modifiers
-                update_modifiers_from_key(&key_str, &mut history.modifiers, true);
+                if key_str.contains("Control") && !history.modifiers.contains(&"Ctrl".to_string()) {
+                    history.modifiers.push("Ctrl".to_string());
+                } else if key_str.contains("Shift")
+                    && !history.modifiers.contains(&"Shift".to_string())
+                {
+                    history.modifiers.push("Shift".to_string());
+                } else if key_str.contains("Alt") && !history.modifiers.contains(&"Alt".to_string())
+                {
+                    history.modifiers.push("Alt".to_string());
+                }
             }
             bevy::input::ButtonState::Released => {
                 info!("Key released: {key_str}");
 
-                // Calculate duration if we have a press time
                 if let Some(press_time) = history.press_time {
                     let duration = Instant::now().duration_since(press_time);
                     history.last_duration_ms = duration.as_millis().try_into().ok();
                 }
 
-                // Remove from active keys
                 history.active_keys.retain(|k| k != &key_str);
 
                 // Update modifiers
-                update_modifiers_from_key(&key_str, &mut history.modifiers, false);
+                if key_str.contains("Control") {
+                    history.modifiers.retain(|m| m != "Ctrl");
+                } else if key_str.contains("Shift") {
+                    history.modifiers.retain(|m| m != "Shift");
+                } else if key_str.contains("Alt") {
+                    history.modifiers.retain(|m| m != "Alt");
+                }
 
-                // If all keys are released, mark as completed and save the last keys
                 if history.active_keys.is_empty() && !history.last_keys.is_empty() {
                     history.completed = true;
                 }
             }
         }
 
-        // Always update last_keys to show what was pressed
         if !history.active_keys.is_empty() {
-            let active = history.active_keys.clone();
-            history.last_keys = active;
+            history.last_keys = history.active_keys.clone();
         }
     }
 }
 
-/// Update the keyboard display text
-#[allow(clippy::needless_pass_by_value)] // Bevy systems require owned Res<T>
+/// Update the keyboard display
 fn update_keyboard_display(
     history: Res<KeyboardInputHistory>,
     mut query: Query<&mut Text, With<KeyboardDisplayText>>,
+    port: Res<CurrentPort>,
 ) {
-    // Only update if the history has changed
     if !history.is_changed() {
         return;
     }
-
-    info!(
-        "Updating keyboard display - Keys: {:?}, Modifiers: {:?}, Duration: {:?}, Completed: {}",
-        history.last_keys, history.modifiers, history.last_duration_ms, history.completed
-    );
 
     for mut text in &mut query {
         let keys_display = if history.last_keys.is_empty() {
@@ -336,14 +243,9 @@ fn update_keyboard_display(
             "Ready"
         };
 
-        let port = std::env::var("BRP_PORT")
-            .ok()
-            .and_then(|s| s.parse::<u16>().ok())
-            .unwrap_or(15702);
-
         text.0 = format!(
-            "Last keys: [{keys_display}]\nModifiers: [{modifiers_display}]\nDuration: {duration_display}\nStatus: {status}\n\nUse curl to send keys:\ncurl -X POST http://localhost:{port}/brp_extras/send_keys \\\n  -H \"Content-Type: application/json\" \\\n  -d '{{\"keys\": [\"KeyA\", \"Space\"]}}'"
+            "Last keys: [{keys_display}]\nModifiers: [{modifiers_display}]\nDuration: {duration_display}\nStatus: {status}\n\nUse curl to send keys:\ncurl -X POST http://localhost:{}/brp_extras/send_keys \\\n  -H \"Content-Type: application/json\" \\\n  -d '{{\"keys\": [\"KeyA\", \"Space\"]}}'",
+            port.0
         );
     }
 }
-

@@ -1,7 +1,7 @@
 [
   {
     "test_name": "app_launch_status",
-    "test_file": "app_launch_status.md",
+    "test_file": ".claude/commands/tests/app_launch_status.md",
     "port": 20101,
     "app_name": "extras_plugin",
     "launch_instruction": "Launch extras_plugin example on port 20101",
@@ -10,7 +10,7 @@
   },
   {
     "test_name": "brp_extras_methods",
-    "test_file": "brp_extras_methods.md",
+    "test_file": ".claude/commands/tests/brp_extras_methods.md",
     "port": 20102,
     "app_name": "extras_plugin",
     "launch_instruction": "Launch extras_plugin example on port 20102",
@@ -19,7 +19,7 @@
   },
   {
     "test_name": "data_operations",
-    "test_file": "data_operations.md",
+    "test_file": ".claude/commands/tests/data_operations.md",
     "port": 20103,
     "app_name": "extras_plugin",
     "launch_instruction": "Launch extras_plugin example on port 20103",
@@ -28,7 +28,7 @@
   },
   {
     "test_name": "debug_mode",
-    "test_file": "debug_mode.md",
+    "test_file": ".claude/commands/tests/debug_mode.md",
     "port": 20104,
     "app_name": "extras_plugin",
     "launch_instruction": "Launch extras_plugin example on port 20104",
@@ -37,7 +37,7 @@
   },
   {
     "test_name": "discovery",
-    "test_file": "discovery.md",
+    "test_file": ".claude/commands/tests/discovery.md",
     "port": "N/A",
     "app_name": "N/A",
     "launch_instruction": "No app launch required - discovery works from workspace metadata",
@@ -46,7 +46,7 @@
   },
   {
     "test_name": "format_discovery_with_plugin",
-    "test_file": "format_discovery_with_plugin.md",
+    "test_file": ".claude/commands/tests/format_discovery_with_plugin.md",
     "port": 20105,
     "app_name": "extras_plugin",
     "launch_instruction": "Launch extras_plugin example on port 20105",
@@ -55,7 +55,7 @@
   },
   {
     "test_name": "introspection",
-    "test_file": "introspection.md",
+    "test_file": ".claude/commands/tests/introspection.md",
     "port": 20106,
     "app_name": "extras_plugin",
     "launch_instruction": "Launch extras_plugin example on port 20106",
@@ -64,7 +64,7 @@
   },
   {
     "test_name": "large_response",
-    "test_file": "large_response.md",
+    "test_file": ".claude/commands/tests/large_response.md",
     "port": 20107,
     "app_name": "extras_plugin",
     "launch_instruction": "Launch extras_plugin example on port 20107",
@@ -73,7 +73,7 @@
   },
   {
     "test_name": "no_plugin_tests",
-    "test_file": "no_plugin_tests.md",
+    "test_file": ".claude/commands/tests/no_plugin_tests.md",
     "port": 25000,
     "app_name": "extras_no_plugin",
     "launch_instruction": "Launch extras_no_plugin example (uses hard-coded port 25000)",
@@ -82,7 +82,7 @@
   },
   {
     "test_name": "registry_discovery",
-    "test_file": "registry_discovery.md",
+    "test_file": ".claude/commands/tests/registry_discovery.md",
     "port": 20108,
     "app_name": "extras_plugin",
     "launch_instruction": "Launch extras_plugin example on port 20108",
@@ -91,7 +91,7 @@
   },
   {
     "test_name": "watch_commands",
-    "test_file": "watch_commands.md",
+    "test_file": ".claude/commands/tests/watch_commands.md",
     "port": 20109,
     "app_name": "extras_plugin",
     "launch_instruction": "Launch extras_plugin example on port 20109",
@@ -100,7 +100,7 @@
   },
   {
     "test_name": "workspace_disambiguation",
-    "test_file": "workspace_disambiguation.md",
+    "test_file": ".claude/commands/tests/workspace_disambiguation.md",
     "port": 20110,
     "app_name": "various",
     "launch_instruction": "Launch apps as needed on port 20110 (may use multiple apps for testing)",

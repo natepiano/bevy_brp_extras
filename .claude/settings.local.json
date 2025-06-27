@@ -48,7 +48,8 @@
       "mcp__brp__brp_list_active_watches",
       "mcp__brp__brp_stop_watch",
       "Bash(jq:*)",
-      "mcp__brp__brp_launch_bevy_app"
+      "mcp__brp__brp_launch_bevy_app",
+      "Bash(kill:*)"
     ],
     "deny": []
   }
