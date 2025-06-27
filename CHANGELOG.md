@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.1] - Unreleased
 
 ### Added
+- claude code agentic test suite for parallel execution of bevy_brp_extras and bevy_brp_mcp
 - New `brp_extras/send_keys` method for simulating keyboard input
 - Debug mode for format discovery via `brp_extras/set_debug_mode` method
   - Provides detailed diagnostic information about type discovery process
