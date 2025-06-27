@@ -12,8 +12,6 @@
 //!
 //! The app displays the last keyboard inputs on screen.
 
-use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Instant;
 
 use bevy::input::keyboard::KeyboardInput;
@@ -42,47 +40,13 @@ struct KeyboardInputHistory {
 #[derive(Component)]
 struct KeyboardDisplayText;
 
-/// Resource to detect external shutdown signals
-#[derive(Resource)]
-struct ShutdownDetector {
-    running: Arc<AtomicBool>,
-}
 
 fn main() {
     let brp_plugin = BrpExtrasPlugin::new(); // or BrpExtrasPlugin::with_port(8080) for custom port
     let (port, _) = brp_plugin.get_effective_port();
 
-    // Set up panic hook to log to same file as the app
-    let port_for_panic = port;
-    std::panic::set_hook(Box::new(move |panic_info| {
-        error!("PANIC DETECTED on port {}: {}", port_for_panic, panic_info);
-        error!("PANIC LOCATION: {:?}", panic_info.location());
-        if let Some(payload) = panic_info.payload().downcast_ref::<&str>() {
-            error!("PANIC PAYLOAD: {}", payload);
-        } else if let Some(payload) = panic_info.payload().downcast_ref::<String>() {
-            error!("PANIC PAYLOAD: {}", payload);
-        }
-        error!(
-            "PANIC BACKTRACE: {:?}",
-            std::backtrace::Backtrace::capture()
-        );
-    }));
 
-    // Set up exit detection
-    let running = Arc::new(AtomicBool::new(true));
-    let running_clone = running.clone();
-
-    if let Err(e) = ctrlc::set_handler(move || {
-        warn!("SIGNAL RECEIVED: SIGINT/SIGTERM on port {}", port_for_panic);
-        warn!("Call stack: {:?}", std::backtrace::Backtrace::capture());
-        warn!("Setting running flag to false - app will exit");
-        running_clone.store(false, Ordering::SeqCst);
-    }) {
-        error!("Error setting Ctrl-C handler: {e}");
-        return;
-    }
-
-    info!("Starting app with panic/signal detection on port {}", port);
+    info!("Starting app on port {}", port);
 
     App::new()
         .add_plugins(DefaultPlugins.set(bevy::window::WindowPlugin {
@@ -95,7 +59,6 @@ fn main() {
         }))
         .add_plugins(brp_plugin)
         .init_resource::<KeyboardInputHistory>()
-        .insert_resource(ShutdownDetector { running })
         .add_systems(Startup, (setup_test_entities, setup_ui))
         .add_systems(
             Update,
@@ -103,7 +66,6 @@ fn main() {
                 keep_running,
                 track_keyboard_input,
                 update_keyboard_display,
-                check_shutdown_signal,
             ),
         )
         .run();
@@ -385,13 +347,3 @@ fn update_keyboard_display(
     }
 }
 
-/// Check for shutdown signals and log them
-fn check_shutdown_signal(shutdown: &Res<ShutdownDetector>, mut exit: EventWriter<AppExit>) {
-    let running = shutdown.running.load(Ordering::SeqCst);
-    if !running {
-        warn!("SHUTDOWN SIGNAL DETECTED - running flag was set to false");
-        warn!("This should only happen from the ctrlc handler or external signal");
-        warn!("Initiating clean app exit");
-        exit.write(AppExit::Success);
-    }
-}
