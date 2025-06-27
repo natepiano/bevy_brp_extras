@@ -50,7 +50,8 @@ impl BrpExtrasPlugin {
     /// 1. `BRP_PORT` environment variable (highest priority)
     /// 2. Explicitly set port via `with_port()`
     /// 3. Default port (15702)
-    fn get_effective_port(&self) -> (u16, String) {
+    #[must_use]
+    pub fn get_effective_port(&self) -> (u16, String) {
         let env_port = std::env::var("BRP_PORT")
             .ok()
             .and_then(|s| s.parse::<u16>().ok());
@@ -111,6 +112,9 @@ impl Plugin for BrpExtrasPlugin {
 
         // Add the system to process timed key releases
         app.add_systems(Update, keyboard::process_timed_key_releases);
+
+        // Add the system to handle deferred shutdown
+        app.add_systems(Update, shutdown::deferred_shutdown_system);
 
         app.add_systems(Startup, move |_world: &mut World| {
             log_initialization(effective_port, &source_description);

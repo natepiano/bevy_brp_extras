@@ -3,12 +3,14 @@
 use bevy::prelude::*;
 use bevy::remote::{BrpError, BrpResult, error_codes};
 use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
+use bevy::tasks::IoTaskPool;
 use serde_json::{Value, json};
 
 /// Handler for screenshot requests
 ///
 /// Takes a screenshot of the primary window and saves it to the specified path.
 /// The path parameter must be provided in the request.
+/// File I/O is performed asynchronously to avoid blocking the main thread.
 pub fn handler(In(params): In<Option<Value>>, world: &mut World) -> BrpResult {
     // Check if PNG support is available at runtime
     if bevy::image::ImageFormat::from_extension("png").is_none() {
@@ -70,30 +72,37 @@ pub fn handler(In(params): In<Option<Value>>, world: &mut World) -> BrpResult {
             Name::new(format!("Screenshot_{absolute_path_str}")),
         ))
         .observe(move |trigger: Trigger<ScreenshotCaptured>| {
-            info!("Screenshot captured! Attempting to save to: {path_for_observer}");
+            info!("Screenshot captured! Starting async save to: {path_for_observer}");
             let img = trigger.event().0.clone();
-            match img.try_into_dynamic() {
-                Ok(dyn_img) => {
-                    match std::fs::create_dir_all(
-                        std::path::Path::new(&path_for_observer)
-                            .parent()
-                            .unwrap_or_else(|| std::path::Path::new(".")),
-                    ) {
-                        Ok(()) => match dyn_img.save(&path_for_observer) {
-                            Ok(()) => {
-                                info!("Screenshot successfully saved to: {path_for_observer}");
+            let path_clone = path_for_observer.clone();
+
+            // Move file I/O to background thread to avoid blocking main thread
+            IoTaskPool::get()
+                .spawn(async move {
+                    match img.try_into_dynamic() {
+                        Ok(dyn_img) => {
+                            // Create parent directory if needed
+                            if let Some(parent) = std::path::Path::new(&path_clone).parent() {
+                                if let Err(e) = std::fs::create_dir_all(parent) {
+                                    error!("Failed to create directory for screenshot {path_clone}: {e}");
+                                    return;
+                                }
                             }
-                            Err(e) => {
-                                error!("Failed to save screenshot to {path_for_observer}: {e}");
+
+                            // Save the image
+                            match dyn_img.save(&path_clone) {
+                                Ok(()) => {
+                                    info!("Screenshot successfully saved to: {path_clone}");
+                                }
+                                Err(e) => {
+                                    error!("Failed to save screenshot to {path_clone}: {e}");
+                                }
                             }
-                        },
-                        Err(e) => error!(
-                            "Failed to create directory for screenshot {path_for_observer}: {e}"
-                        ),
+                        }
+                        Err(e) => error!("Failed to convert screenshot to dynamic image: {e}"),
                     }
-                }
-                Err(e) => error!("Failed to convert screenshot to dynamic image: {e}"),
-            }
+                })
+                .detach();
         })
         .id();
 
@@ -103,6 +112,6 @@ pub fn handler(In(params): In<Option<Value>>, world: &mut World) -> BrpResult {
         "success": true,
         "path": absolute_path_str,
         "working_directory": std::env::current_dir().unwrap_or_else(|_| std::path::PathBuf::from("unknown")).to_string_lossy(),
-        "note": "Screenshot capture initiated. The file will be saved asynchronously."
+        "note": "Screenshot capture initiated. File I/O will be performed asynchronously on background thread."
     }))
 }
